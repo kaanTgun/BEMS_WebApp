@@ -7,6 +7,7 @@ const StartIndex = 148
 const Steps = 120
 const soc = 0.6;
 
+
 // const calendar = vanillaCalendar.init({
 // 	disablePastDays: true
 // });
@@ -55,7 +56,7 @@ class Actor {
 		this.ModelPromise = this.Sess.loadModel(this.Path);
 		this.GraphedData = {
 			soc:InitSOC,
-			SOCs:[],
+			SOCs:[InitSOC],
 			Actions:[]
 		}
 		this.evalActor();
@@ -63,7 +64,7 @@ class Actor {
 
 	async evalActor(){
 		await Environment;
-		for (let index = 0; index < Environment.GraphedData.DataObj.Time.length; index++) {
+		for (let index = 0; index < Environment.GraphedData.DataObj.Time.length-1; index++) {
 			let action = await this.updatePrediction([Environment.GraphedData.DataObj.Time[index], Environment.GraphedData.DataObj.Month[index], this.GraphedData.soc, Environment.GraphedData.DataObj.Price[index]]);
 			Environment.Price_4_Visual.push(Environment.GraphedData.DataObj.Price[index]*1000);
 
@@ -125,25 +126,31 @@ class LineGraph{
 					display:true
 				},
 				scales: {
-					x: {
-						labels: 'hours',
-						display: true
+					xAxes: {
+						scaleLabel: {
+							display: true,
+							labelString: 'Hours'
+						},
 					},
 					yAxes: [
 						{
 							id: 'left-y-axis',
 							type: 'linear',
 							position: 'left',
-							labelString: 'MWh/$' ,
-							display: true
+							scaleLabel: {
+								display: true,
+								labelString: 'MWh/$' 
+							}
 							
 						},
 						{
 							id: 'right-y-axis',
 							type: 'linear',
 							position: 'right',
-							labelString: '%' ,
-							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: '% BatteryCharge' 
+							},
 							ticks: {
                 max: 1,
                 min: 0,
@@ -246,7 +253,7 @@ async function fetchStrategies(URL){
 		linprog.SOCs.unshift(Environment.initSOC)
 
 
-		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=6`;
+		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=2`;
 		const ema_resp = await fetch(ema_url);
 		ema = await ema_resp.json();
 		ema.SOCs.unshift(Environment.initSOC)
@@ -291,23 +298,23 @@ function DDQN_CheckboxEvent() {
 	let ckbx = document.getElementById('DDQN_Checkbox');
 	mainGraph.updateGraph('DDQN',DDQN.GraphedData,  'rgb(54, 162, 235)',  ckbx.checked);
 };
+function DQN_CheckboxEvent() {
+	let ckbx = document.getElementById('DQN_Checkbox');
+	mainGraph.updateGraph('DQN',DQN.GraphedData,  'rgb(154, 162, 35)',  ckbx.checked);
+};
 function LP_CheckboxboxEvent() {
 	let ckbx = document.getElementById('LP_Checkbox');
 	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, 'rgb(54, 2, 25)',  ckbx.checked);
 };
 
-async function btn_24Event() {
+function btn_24Event() {
 	if (Environment.GraphedData.Steps !== 24){
 		Environment.GraphedData.Steps=24;
-		await UpdateCalcs();
-
 	}
 };
-async function btn_48Event() {
+function btn_48Event() {
 	if (Environment.GraphedData.Steps!== 48){
 		Environment.GraphedData.Steps=48;
-		await UpdateCalcs();
-
 	}
 };
 function btn_72Event() {
@@ -319,15 +326,19 @@ function btn_72Event() {
 loadData(data_path).then(async JSON_DATA => {
 
 	Environment = new Enve(JSON_DATA, soc);
-	DDQN				= new Actor('Models/DDQN_3.onnx', 'DDQN', Environment.initSOC);
+	DDQN				= new Actor('Assets/Models/DDQN_Short_S1.onnx', 'DDQN', Environment.initSOC);
+	DQN					= new Actor('Assets/Models/DQN_Short_S1.onnx', 'DQN', Environment.initSOC);
+
 	Strategies 	= await fetchStrategies(BEMS_API);
-	Strategies['DDQN'] = DDQN.GraphedData;
+	Strategies['DDQN'] 	= DDQN.GraphedData;
+	Strategies['DQN'] 	= DQN.GraphedData;
 
 	// Calculate rewards can be achieved by fallowing the Strategies
 	Rewards = [];
 	for (const key in Strategies) {
 		Rewards.push(calcTotalReward(Strategies[`${key}`].Actions));
 	};
+
 	mainGraph 	= new LineGraph(ctx);
 	barGraph 		= new BarGraph(ctx_2);
 

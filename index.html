@@ -7,17 +7,19 @@
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="Calender/src/vanillaCalendar.css" rel="stylesheet">
+	<link rel="stylesheet" href="loader.css">
 	<link href="style.css" rel="stylesheet">
 	
 	<title>Document</title>
 </head>
 <body>
 	<div class="page-header">
-		<img class="logo" src="logo.png" />
+		<img class="logo" src="Assets/logo.png" />
 		<h1>Smart Battery Strategy</h1>
 	</div>
 
 	<div class="container">
+										<!-- Header START -->
 		<div>
 			<h3 style="margin-top: 22px;"> 
 				<b>
@@ -32,9 +34,11 @@
 				Using large batteries would help lower the stress on the power grid and make the system much stable. 
 				The question becomes, how can we schedule a charge-discharge cycle what is battery systems?
 			</p>
+		</div>
+		<div>
 			<h4>
 				<b>
-					Few things to keep in mind for the battery settings:
+					Few things to keep in mind:
 				</b>
 			</h4>
 			<ul>
@@ -42,62 +46,70 @@
 					Batteries operation capacity is limited to minimum of 20% to maximum of 80%
 				</li>
 				<li>
-					Assume it can be charged and discharged only 10% per hour
+					Assume the battery can be charged and discharged only 10% per hour
+				</li>
+				<li>
+					The dataset used is available in Independent Electricity System Operator (IESO)
 				</li>
 			</ul>
 		</div>
-
-		<div class="clearfix vivible-ld"></div>
-		<div class="row">
-			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-				<h5 style="margin-top: 22px;"> 
-					<b>Linear programming (LP) </b> 
+										<!-- END -->
+										<!-- Discriptions-1 START -->
+		<div class="row align-items-center">
+			<div class="col-lg-9 col-md-8 col-sm-12 col-xs-12" >
+				<h5 style="margin-top: 22px;"> 			
+					<b>Linear programming (LP)</b> 
 				</h5>
-				<p>
-					LP is a methodology used to find a global optimum in a linearly defined space.
-					Which means that, assuming we can predict the price of power perfectly, we can find the maximum amount of profit or reward we can gain by fallowing the linear programming strategy.
-					In a real-world scenario it is impossible to predict the feature perfectly, so we will use the linear programming strategy as a scale to compare other control strategies.
-					
-				</p>
-
+				<div class="align-self-center">
+					<p class="text-justify">
+						LP is a methodology used to find a global optimum in a linearly defined space.
+						Which means that, assuming we can predict the price of power perfectly, we can find the maximum amount of profit or reward we can gain by fallowing the linear programming strategy.
+						In a real-world scenario it is impossible to predict the feature perfectly, so we will use the linear programming strategy as a scale to compare other control strategies.
+					</p>
+				</div>
 			</div>
-			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+			<div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+				<img src="Assets/EMA.png" class="img-fluid" alt="Responsive image" />
+			</div>
+			<div>
 				<h5 style="margin-top: 22px;"> 
-					<b>
-						Exponential Mean Average (EMA) 
-					</b>
+					<b>Exponential Mean Average (EMA)</b>
 				</h5>
 				<p>
 					EMA is a type of mean average calculation in a given dataset however, it places a larger weight to the most recent value. 
 					Compared to linear programming this strategy does not require for us to know the feature price of power to make the charging or discharging decision.
 					This is an extremely simple and efficient algorithm. It only requires us to know past few hours of price data to make the decision of buying or selling power from the grid. 
 					The algorithm simply says; buy power from the grid if the current electricity price is lower than EMA and sell if it is higher. Exponential Mean Average is also a widely used strategy by day-traders to evaluate stocks prices.
-
-				</p>
+				</p>				
 			</div>
 		</div>
-
+										<!-- END -->
+										<!-- Graph START -->
 		<div class="toggleButtons"> 
 			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="checkbox" id="DDQN_Checkbox" onclick="DDQN_CheckboxEvent()">
-				<label class="form-check-label" for="inlineCheckbox1">Double Deep Q-Network</label>
+				<input class="form-check-input" type="checkbox" id="LP_Checkbox" onclick="LP_CheckboxboxEvent()" >
+				<label class="form-check-label" for="inlineCheckbox3">Linear Programming 📈 </label>
 			</div>
 			<div class="form-check form-check-inline">
 				<input class="form-check-input" type="checkbox" id="EMA_Checkbox"  onclick="EMA_CheckboxEvent()">
-				<label class="form-check-label" for="inlineCheckbox2">Exponential Moving Average</label>
+				<label class="form-check-label" for="inlineCheckbox2">Exponential Moving Average 📊 </label>
 			</div>
 			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="checkbox" id="LP_Checkbox" onclick="LP_CheckboxboxEvent()" >
-				<label class="form-check-label" for="inlineCheckbox3">Linear Programming</label>
+				<input class="form-check-input" type="checkbox" id="DQN_Checkbox" onclick="DQN_CheckboxEvent()">
+				<label class="form-check-label" for="inlineCheckbox1">Deep Q-Network 🤖 </label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="checkbox" id="DDQN_Checkbox" onclick="DDQN_CheckboxEvent()">
+				<label class="form-check-label" for="inlineCheckbox1">Double Deep Q-Network 🤖 🤖</label>
 			</div>
 		</div>
-		<canvas id="chart_1" style="display:none;" ></canvas>
-		<div class="loader" id="loader_1"></div>
-
+		<div class="container"> 
+			<canvas id="chart_1" style="display:none;"></canvas>
+			<div class="loader" id="loader_1"></div>
+		</div>
 	</div>
-
-
-
+										<!-- END -->
+										<!-- Discriptions-2 START -->
 		<div class="flexbox-container">
 
 			<p class='flexbox-items' style="color: aliceblue;"> 
@@ -107,6 +119,8 @@
 			<div class='flexbox-items' style="background-color: aliceblue;">
 				<canvas id="chart_2" style="height: 300px; width: 300px;"></canvas>
 			</div>
+
+
 				<!-- <div class="btn-group"  role="group" aria-label="Basic example">
 					<button id='hr-24' type="button" class="btn btn-secondary" onclick="btn_24Event()" >24-hr</button>
 					<button id='day-2' type="button" class="btn btn-secondary" onclick="btn_48Event()" >2-day</button>
@@ -151,8 +165,61 @@
 
 				</div> -->
 
-
 		</div>
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-9 col-md-8 col-sm-12">
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic sequi impedit optio non eaque ipsa quod, officiis ipsum ex sit exercitationem nostrum quas itaque. Voluptatem vel quas iste similique odit.</p>
+				</div>
+				<div class="col-lg-3 col-md-4 col-sm-12">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							<H4>DQN</H4>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="DQN_S" id="DQN_S1" checked>
+								<label class="form-check-label" for="exampleRadios1">
+									Strategy 1
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="DQN_S" id="DQN_S2" >
+								<label class="form-check-label" for="exampleRadios2">
+									Strategy 2
+								</label>
+							</div>
+							<div class="form-check disabled">
+								<input class="form-check-input" type="radio" name="DQN_S" id="DQN_S3" >
+								<label class="form-check-label" for="exampleRadios3">
+									Strategy 3
+								</label>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							<H4>DDQN</H4>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="DDQN_S" id="DDQN_S1" checked>
+								<label class="form-check-label" for="exampleRadios1">
+									Strategy 1
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="DDQN_S" id="DDQN_S2" >
+								<label class="form-check-label" for="exampleRadios2">
+									Strategy 2
+								</label>
+							</div>
+							<div class="form-check disabled">
+								<input class="form-check-input" type="radio" name="DDQN_S" id="DDQN_S3" >
+								<label class="form-check-label" for="exampleRadios3">
+									Strategy 3
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+										<!-- END -->
 
 		<div class="footer">
 			<p>Kaan Gun Feb. 2021</p>
