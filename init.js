@@ -306,7 +306,7 @@ function LP_CheckboxboxEvent() {
 	let ckbx = document.getElementById('LP_Checkbox');
 	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, 'rgb(54, 2, 25)',  ckbx.checked);
 };
-
+// TODO
 function btn_24Event() {
 	if (Environment.GraphedData.Steps !== 24){
 		Environment.GraphedData.Steps=24;
