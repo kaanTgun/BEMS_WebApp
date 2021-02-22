@@ -3,8 +3,9 @@ const BEMS_API = 'https://bems-project-server.herokuapp.com/api/v1'
 const data_path = 'Data/data.json';
 let ctx = document.getElementById('chart_1').getContext('2d');
 let ctx_2 = document.getElementById('chart_2').getContext('2d');
-const StartIndex = 148
-const Steps = 120
+
+const StartIndex = 50;
+const Steps = 48;
 const soc = 0.6;
 
 let barGraphData = {
@@ -13,25 +14,24 @@ let barGraphData = {
 };
 let Strategies;
 
-
-// const calendar = vanillaCalendar.init({
-// 	disablePastDays: true
-// });
-
 class Enve {
 	constructor(JsonData, initSOC) {
 		this.batteryCapacity = 100;
 		this.initSOC = initSOC;
-		this.Price_4_Visual = [];
 		this.JsonData = JsonData;
 		this.GraphedData = {
 			StartIndex:StartIndex, 
 			Steps:Steps,
 			DataObj:{}
 		};
-		this.setGraphedData();
+		this.setGraphedData(this.GraphedData.StartIndex, this.GraphedData.Steps);
+		document.getElementsByClassName('slider')[0].setAttribute('max', this.JsonData.length -100);
+		document.getElementsByClassName('slider')[0].setAttribute('value', this.GraphedData.StartIndex);
 	};
-	setGraphedData() {
+	setGraphedData(srtIndex, step) {
+		this.GraphedData.StartIndex = parseInt(srtIndex);
+		this.GraphedData.Steps = parseInt(step);
+
 		let DataObj = {Time:[], Month:[], Date:'', Price:[]};
 		try{
 			const time_interval = this.JsonData.slice(this.GraphedData.StartIndex, this.GraphedData.StartIndex + this.GraphedData.Steps);
@@ -74,7 +74,6 @@ class Actor {
 		await Environment;
 		for (let index = 0; index < Environment.GraphedData.DataObj.Time.length-1; index++) {
 			let action = await this.updatePrediction([Environment.GraphedData.DataObj.Time[index], Environment.GraphedData.DataObj.Month[index], this.GraphedData.soc, Environment.GraphedData.DataObj.Price[index]]);
-			Environment.Price_4_Visual.push(Environment.GraphedData.DataObj.Price[index]*1000);
 
 			if (0 === action && this.GraphedData.soc+0.1 < 0.8 ){
 				this.GraphedData.soc += 0.1;
@@ -115,7 +114,7 @@ class LineGraph{
 				datasets: [
 					{
 						label: 'Electricity Price (WWh/$)',
-						data: Environment.Price_4_Visual,
+						data: Environment.GraphedData.DataObj.Price.map(x => x*1000),
 						yAxisID: 'left-y-axis',
 	
 						borderWidth: 1,
@@ -262,7 +261,7 @@ async function fetchStrategies(URL){
 		linprog.color =  '#99EF7F';
 
 
-		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=2`;
+		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=6`;
 		const ema_resp = await fetch(ema_url);
 		ema = await ema_resp.json();
 		ema.SOCs.unshift(Environment.initSOC);
@@ -278,12 +277,45 @@ async function loadData(path) {
 	const data = response.json();
 	return data;
 };
+async function clearCharts(){
+	if(mainGraph.chart!=null){
+		mainGraph.chart.destroy();
+	}
+	if(barGraph.chart!=null){
+		barGraph.chart.destroy();
+	}
+	document.getElementById("LP_Checkbox").checked = false;
+	document.getElementById("EMA_Checkbox").checked = false;
+	document.getElementById("DQN_Checkbox").checked = false;
+	document.getElementById("DDQN_Checkbox").checked = false;
+
+	// Get the context of the canvas element we want to select
+	mainGraph = await new LineGraph(ctx);
+	document.getElementById("chart_1").style.display = "block";
+
+	barGraph = await new BarGraph(ctx_2);
+
+	document.getElementById("chart_2").style.display = "block";
+}
+
 async function UpdateCalcs() { // TODO
 	// Using the current values of Enve variables, recalculate and graph (Whne the dates or hours change)
-	await DDQN.evalActor();
 	Strategies 	= await fetchStrategies(BEMS_API);
+
+	DDQN.evalActor();
+	DQN.evalActor();
+	Strategies['DDQN'] 	= DDQN.GraphedData;
+	Strategies['DQN'] 	= DQN.GraphedData;
+
+	// Calculate rewards can be achieved by fallowing the Strategies
+	for (const key in Strategies) {
+		barGraphData.Rewards.push(CalcTotalReward(Strategies[`${key}`].Actions));
+		barGraphData.Colors.push(Strategies[`${key}`].color);
+	};
+	await clearCharts();
+	
 };
-function calcTotalReward(actions) {
+function CalcTotalReward(actions) {
 	let reward = 0;
 
 	for (let index = 0; index < actions.length; index++) {
@@ -313,8 +345,15 @@ function DQN_CheckboxEvent() {
 };
 function LP_CheckboxboxEvent() {
 	let ckbx = document.getElementById('LP_Checkbox');
-	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, Strategies.EMA.color,  ckbx.checked);
+	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, Strategies.Linprog.color,  ckbx.checked);
 };
+function DateChanged(){
+	const newDateID = document.getElementsByClassName('slider')[0].value;
+	const newDate = Environment.JsonData[newDateID].Date;
+	Environment.setGraphedData(newDateID, Steps);
+	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
+	UpdateCalcs()
+}
 // TODO
 function btn_24Event() {
 	if (Environment.GraphedData.Steps !== 24){
@@ -337,15 +376,16 @@ loadData(data_path).then(async JSON_DATA => {
 	Environment = new Enve(JSON_DATA, soc);
 	DDQN				= new Actor('Assets/Models/DDQN_Short_S1.onnx', 'DDQN', Environment.initSOC, '#A1A1CF');
 	DQN					= new Actor('Assets/Models/DQN_Short_S1.onnx', 'DQN', Environment.initSOC, '#EF7FE3');
+	document.getElementsByClassName("currentDate")[0].innerHTML = Environment.JsonData[50].Date;
+
 
 	Strategies 	= await fetchStrategies(BEMS_API);
 	Strategies['DDQN'] 	= DDQN.GraphedData;
 	Strategies['DQN'] 	= DQN.GraphedData;
 
 	// Calculate rewards can be achieved by fallowing the Strategies
-
 	for (const key in Strategies) {
-		barGraphData.Rewards.push(calcTotalReward(Strategies[`${key}`].Actions));
+		barGraphData.Rewards.push(CalcTotalReward(Strategies[`${key}`].Actions));
 		barGraphData.Colors.push(Strategies[`${key}`].color);
 	};
 
