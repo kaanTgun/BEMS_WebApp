@@ -7,6 +7,12 @@ const StartIndex = 148
 const Steps = 120
 const soc = 0.6;
 
+let barGraphData = {
+	Rewards:[],
+	Colors:[]
+};
+let Strategies;
+
 
 // const calendar = vanillaCalendar.init({
 // 	disablePastDays: true
@@ -49,15 +55,17 @@ class Enve {
 	};
 };
 class Actor {
-	constructor(path, name, InitSOC) {
+	constructor(path, name, InitSOC, color_) {
 		this.name = name;
+		this.color=color_;
 		this.Path = path;
 		this.Sess = new onnx.InferenceSession();
 		this.ModelPromise = this.Sess.loadModel(this.Path);
 		this.GraphedData = {
 			soc:InitSOC,
 			SOCs:[InitSOC],
-			Actions:[]
+			Actions:[],
+			color:color_
 		}
 		this.evalActor();
 	};
@@ -180,7 +188,7 @@ class LineGraph{
 					yAxisID: 'right-y-axis',
 		
 					data: strategy.SOCs,
-					borderWidth: 1,
+					borderWidth: 2,
 					pointRadius: 1,
 					lineTension:0,
 					backgroundColor: colorRGB,
@@ -221,9 +229,9 @@ class BarGraph{
 				datasets: [
 					{
 						label:'Reward $',
-						data: Rewards,
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(255, 99, 132)'
+						data: barGraphData.Rewards,
+						backgroundColor: barGraphData.Colors,
+						borderColor: barGraphData.Colors
 					}]
 				},
 				options: {
@@ -234,7 +242,7 @@ class BarGraph{
 					scales: {
 						yAxes: [{
 							ticks: {
-                max: Math.round(Rewards[0]),
+                max: Math.round(barGraphData.Rewards[0]),
                 min: 0,
 							}},
 						]
@@ -250,13 +258,15 @@ async function fetchStrategies(URL){
 		const linprog_url = `${URL}/linprog?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}`;
 		const linprog_resp = await fetch(linprog_url);
 		linprog = await linprog_resp.json();
-		linprog.SOCs.unshift(Environment.initSOC)
+		linprog.SOCs.unshift(Environment.initSOC);
+		linprog.color =  '#99EF7F';
 
 
 		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=2`;
 		const ema_resp = await fetch(ema_url);
 		ema = await ema_resp.json();
-		ema.SOCs.unshift(Environment.initSOC)
+		ema.SOCs.unshift(Environment.initSOC);
+		ema.color =  '#EFD57F';
 
 		return {Linprog:linprog, EMA:ema}
 	} catch (error) {
@@ -289,22 +299,21 @@ function calcTotalReward(actions) {
 	};
 	return reward;
 };
-
 function EMA_CheckboxEvent() {
 	let ckbx = document.getElementById('EMA_Checkbox');
-	mainGraph.updateGraph('EMA',Strategies.EMA, 'rgb(154, 200, 25)',  ckbx.checked);
+	mainGraph.updateGraph('EMA',Strategies.EMA, Strategies.EMA.color,  ckbx.checked);
 };
 function DDQN_CheckboxEvent() {
 	let ckbx = document.getElementById('DDQN_Checkbox');
-	mainGraph.updateGraph('DDQN',DDQN.GraphedData,  'rgb(54, 162, 235)',  ckbx.checked);
+	mainGraph.updateGraph('DDQN',DDQN.GraphedData,   Strategies.DDQN.color,  ckbx.checked);
 };
 function DQN_CheckboxEvent() {
 	let ckbx = document.getElementById('DQN_Checkbox');
-	mainGraph.updateGraph('DQN',DQN.GraphedData,  'rgb(154, 162, 35)',  ckbx.checked);
+	mainGraph.updateGraph('DQN', DQN.GraphedData,  Strategies.DQN.color,  ckbx.checked);
 };
 function LP_CheckboxboxEvent() {
 	let ckbx = document.getElementById('LP_Checkbox');
-	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, 'rgb(54, 2, 25)',  ckbx.checked);
+	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, Strategies.EMA.color,  ckbx.checked);
 };
 // TODO
 function btn_24Event() {
@@ -326,17 +335,18 @@ function btn_72Event() {
 loadData(data_path).then(async JSON_DATA => {
 
 	Environment = new Enve(JSON_DATA, soc);
-	DDQN				= new Actor('Assets/Models/DDQN_Short_S1.onnx', 'DDQN', Environment.initSOC);
-	DQN					= new Actor('Assets/Models/DQN_Short_S1.onnx', 'DQN', Environment.initSOC);
+	DDQN				= new Actor('Assets/Models/DDQN_Short_S1.onnx', 'DDQN', Environment.initSOC, '#A1A1CF');
+	DQN					= new Actor('Assets/Models/DQN_Short_S1.onnx', 'DQN', Environment.initSOC, '#EF7FE3');
 
 	Strategies 	= await fetchStrategies(BEMS_API);
 	Strategies['DDQN'] 	= DDQN.GraphedData;
 	Strategies['DQN'] 	= DQN.GraphedData;
 
 	// Calculate rewards can be achieved by fallowing the Strategies
-	Rewards = [];
+
 	for (const key in Strategies) {
-		Rewards.push(calcTotalReward(Strategies[`${key}`].Actions));
+		barGraphData.Rewards.push(calcTotalReward(Strategies[`${key}`].Actions));
+		barGraphData.Colors.push(Strategies[`${key}`].color);
 	};
 
 	mainGraph 	= new LineGraph(ctx);
