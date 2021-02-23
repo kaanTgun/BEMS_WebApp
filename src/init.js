@@ -72,7 +72,10 @@ class Actor {
 
 	async evalActor(){
 		await Environment;
-		for (let index = 0; index < Environment.GraphedData.DataObj.Time.length-1; index++) {
+		this.GraphedData.Actions = [];
+		this.GraphedData.SOCs = [Environment.initSOC];
+
+		for (let index = 0; index < Environment.GraphedData.DataObj.Time.length; index++) {
 			let action = await this.updatePrediction([Environment.GraphedData.DataObj.Time[index], Environment.GraphedData.DataObj.Month[index], this.GraphedData.soc, Environment.GraphedData.DataObj.Price[index]]);
 
 			if (0 === action && this.GraphedData.soc+0.1 < 0.8 ){
@@ -84,11 +87,11 @@ class Actor {
 			this.GraphedData.SOCs.push(this.GraphedData.soc);
 
 			let coeff = 0;
-			if (action===0){
+			if ( 0 === action){
 				// Buy 
 				coeff = +0.1 
 			};
-			if (action ===1){
+			if (1 === action){
 				// Sell
 				coeff = -0.1 
 			};
@@ -128,7 +131,7 @@ class LineGraph{
 			},
 			options: {
 				title:{
-					text:'Title',
+					text:'Electricity Rates vs Simulated Battery SOCs',
 					fontSize:16,
 					display:true
 				},
@@ -156,7 +159,7 @@ class LineGraph{
 							position: 'right',
 							scaleLabel: {
 								display: true,
-								labelString: '% BatteryCharge' 
+								labelString: 'BatteryCharge' 
 							},
 							ticks: {
                 max: 1,
@@ -204,20 +207,6 @@ class LineGraph{
 		};
 		this.chart.update();
 	};
-	addData(label, data) {
-		this.data.labels.push(label);
-		this.data.datasets.forEach((dataset) => {
-				dataset.data.push(data);
-		});
-		this.update();
-	};
-	removeData() {
-		this.data.labels.pop();
-		this.data.datasets.forEach((dataset) => {
-				dataset.data.pop();
-		});
-		this.update();
-	};
 };
 class BarGraph{
 	constructor(ctx) {
@@ -242,7 +231,7 @@ class BarGraph{
 						yAxes: [{
 							ticks: {
                 max: Math.round(barGraphData.Rewards[0]),
-                min: 0,
+								min:-20
 							}},
 						]
 					},
@@ -288,43 +277,53 @@ async function clearCharts(){
 	document.getElementById("EMA_Checkbox").checked = false;
 	document.getElementById("DQN_Checkbox").checked = false;
 	document.getElementById("DDQN_Checkbox").checked = false;
+	document.getElementById("chart_2_container").style.height = "300px";
 
 	// Get the context of the canvas element we want to select
 	mainGraph = await new LineGraph(ctx);
 	document.getElementById("chart_1").style.display = "block";
-
 	barGraph = await new BarGraph(ctx_2);
 
-	document.getElementById("chart_2").style.display = "block";
-}
-
-async function UpdateCalcs() { // TODO
+};
+async function UpdateCalcs() { 
 	// Using the current values of Enve variables, recalculate and graph (Whne the dates or hours change)
 	Strategies 	= await fetchStrategies(BEMS_API);
 
 	DDQN.evalActor();
 	DQN.evalActor();
+
 	Strategies['DDQN'] 	= DDQN.GraphedData;
 	Strategies['DQN'] 	= DQN.GraphedData;
 
 	// Calculate rewards can be achieved by fallowing the Strategies
+	barGraphData.Colors = [];
+	barGraphData.Rewards = [];
 	for (const key in Strategies) {
 		barGraphData.Rewards.push(CalcTotalReward(Strategies[`${key}`].Actions));
 		barGraphData.Colors.push(Strategies[`${key}`].color);
 	};
-	await clearCharts();
-	
+
+	if (typeof(mainGraph) == 'undefined'){
+		// Get the context of the canvas element we want to select
+		mainGraph = await new LineGraph(ctx);
+		document.getElementById("chart_1").style.display = "block";
+		document.getElementById("loader_1").style.display = "none";
+		barGraph = await new BarGraph(ctx_2);
+	}
+	else{
+		await clearCharts();
+	}
 };
 function CalcTotalReward(actions) {
 	let reward = 0;
 
 	for (let index = 0; index < actions.length; index++) {
 		const action = Number((actions[index]).toFixed(1));
-		if (action === 0.1){
+		if (0.1 === action){
 			// Buy
 			reward -= Environment.GraphedData.DataObj.Price[index] * Environment.batteryCapacity;
 		};
-		if (action === -0.1){
+		if (-0.1 === action){
 			// Sell
 			reward += Environment.GraphedData.DataObj.Price[index] * Environment.batteryCapacity;
 		};
@@ -353,45 +352,11 @@ function DateChanged(){
 	Environment.setGraphedData(newDateID, Steps);
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
 	UpdateCalcs()
-}
-// TODO
-function btn_24Event() {
-	if (Environment.GraphedData.Steps !== 24){
-		Environment.GraphedData.Steps=24;
-	}
 };
-function btn_48Event() {
-	if (Environment.GraphedData.Steps!== 48){
-		Environment.GraphedData.Steps=48;
-	}
-};
-function btn_72Event() {
-	if (Environment.Steps !== 72){
-		Environment.Steps=72;
-	}
-};
-
 loadData(data_path).then(async JSON_DATA => {
-
 	Environment = new Enve(JSON_DATA, soc);
 	DDQN				= new Actor('Assets/Models/DDQN_Short_S1.onnx', 'DDQN', Environment.initSOC, '#A1A1CF');
 	DQN					= new Actor('Assets/Models/DQN_Short_S1.onnx', 'DQN', Environment.initSOC, '#EF7FE3');
-	document.getElementsByClassName("currentDate")[0].innerHTML = Environment.JsonData[50].Date;
-
-
-	Strategies 	= await fetchStrategies(BEMS_API);
-	Strategies['DDQN'] 	= DDQN.GraphedData;
-	Strategies['DQN'] 	= DQN.GraphedData;
-
-	// Calculate rewards can be achieved by fallowing the Strategies
-	for (const key in Strategies) {
-		barGraphData.Rewards.push(CalcTotalReward(Strategies[`${key}`].Actions));
-		barGraphData.Colors.push(Strategies[`${key}`].color);
-	};
-
-	mainGraph 	= new LineGraph(ctx);
-	barGraph 		= new BarGraph(ctx_2);
-
-	document.getElementById("loader_1").style.display = "none";
-  document.getElementById("chart_1").style.display = "block";
+	document.getElementsByClassName("currentDate")[0].innerHTML = Environment.JsonData[StartIndex].Date;
+	await UpdateCalcs();
 });
