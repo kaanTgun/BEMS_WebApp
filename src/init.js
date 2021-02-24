@@ -1,10 +1,11 @@
 const BEMS_API = 'https://bems-project-server.herokuapp.com/api/v1'
 // const BEMS_API = 'http://127.0.0.1:5000/api/v1';
-const data_path = 'Data/data.json';
+const DatasetPath = 'Data/data.json';
+const ModelPath = 'Assets/Models/'
 let ctx = document.getElementById('chart_1').getContext('2d');
 let ctx_2 = document.getElementById('chart_2').getContext('2d');
 
-const StartIndex = 50;
+const StartIndex = 100;
 const Steps = 48;
 const soc = 0.6;
 
@@ -342,7 +343,7 @@ function DQN_CheckboxEvent() {
 	let ckbx = document.getElementById('DQN_Checkbox');
 	mainGraph.updateGraph('DQN', DQN.GraphedData,  Strategies.DQN.color,  ckbx.checked);
 };
-function LP_CheckboxboxEvent() {
+function LP_CheckboxEvent() {
 	let ckbx = document.getElementById('LP_Checkbox');
 	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, Strategies.Linprog.color,  ckbx.checked);
 };
@@ -353,10 +354,36 @@ function DateChanged(){
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
 	UpdateCalcs()
 };
-loadData(data_path).then(async JSON_DATA => {
+function DateDraged() {
+	const newDateID = document.getElementsByClassName('slider')[0].value;
+	const newDate = Environment.JsonData[newDateID].Date;
+	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
+	
+}
+
+async function changeDQNStrategy() {
+	const DQNStrategy = document.querySelector('input[name="StrategyInput"]:checked').value;
+	const emaParam = document.querySelector('input[name="emaInput"]:checked').value;
+	const decayParam = document.querySelector('input[name="decayInput"]:checked').value;
+
+	if (DQNStrategy == "S1"){
+		const DDQNModelPath = `${ModelPath}/DDQN_Long_${DQNStrategy}.onnx`;
+		const DQNModelPath = `${ModelPath}/DQN_Long_${DQNStrategy}.onnx`;
+	} else{
+		const DDQNModelPath = `${ModelPath}/DDQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
+		const DQNModelPath = `${ModelPath}/DQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
+	}
+
+	DDQN	= await new Actor(DDQNModelPath, 'DDQN', Environment.initSOC, '#A1A1CF');
+	DQN		= await new Actor(DQNModelPath, 'DQN', Environment.initSOC, '#EF7FE3');
+	await UpdateCalcs();
+};
+
+
+loadData(DatasetPath).then(async JSON_DATA => {
 	Environment = new Enve(JSON_DATA, soc);
-	DDQN				= new Actor('Assets/Models/DDQN_Short_S1.onnx', 'DDQN', Environment.initSOC, '#A1A1CF');
-	DQN					= new Actor('Assets/Models/DQN_Short_S1.onnx', 'DQN', Environment.initSOC, '#EF7FE3');
+	DDQN				= await new Actor(`${ModelPath}/DDQN_Long_S1.onnx`, 'DDQN', Environment.initSOC, '#A1A1CF');
+	DQN					= await new Actor(`${ModelPath}/DQN_Long_S1.onnx`, 'DQN', Environment.initSOC, '#EF7FE3');
 	document.getElementsByClassName("currentDate")[0].innerHTML = Environment.JsonData[StartIndex].Date;
 	await UpdateCalcs();
 });

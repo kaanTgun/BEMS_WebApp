@@ -5,6 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link href="src/loader.css" rel="stylesheet">
@@ -71,7 +72,7 @@
 			<div class="container">
 				<div>
 					<h5 > 
-						<b>Linear programming (LP)</b>
+						<b>Linear Programming (LP)</b>
 					</h5>
 					<p>
 						LP is a methodology used to find a global optimum in a linearly defined space.
@@ -80,6 +81,7 @@
 					</p>
 				</div>
 				<div class="row align-items-center" style="padding-bottom: 50px;" >
+					<div class="clearfix"></div>
 					<div class="col-lg-8 col-md-7 col-sm-6 col-xs-12" >
 						<h5 style="margin-top: 22px;"> 			
 							<b>Exponential Mean Average (EMA)</b> 
@@ -102,22 +104,24 @@
 		</div>
 											<!-- END -->
 											<!-- Graph START -->
-		<div class="toggleButtons" style="margin-top: 40px;"> 
-			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="checkbox" id="LP_Checkbox" onclick="LP_CheckboxboxEvent()" >
-				<label class="form-check-label" for="inlineCheckbox3">Linear Programming 📈 </label>
-			</div>
-			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="checkbox" id="EMA_Checkbox"  onclick="EMA_CheckboxEvent()">
-				<label class="form-check-label" for="inlineCheckbox2">Exponential Moving Average 📊 </label>
-			</div>
-			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="checkbox" id="DQN_Checkbox" onclick="DQN_CheckboxEvent()">
-				<label class="form-check-label" for="inlineCheckbox1">Deep Q-Network 🤖 </label>
-			</div>
-			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="checkbox" id="DDQN_Checkbox" onclick="DDQN_CheckboxEvent()">
-				<label class="form-check-label" for="inlineCheckbox1">Double Deep Q-Network 🤖 🤖</label>
+		<div class="container">
+			<div class="toggleButtons" style="margin-top: 40px;"> 
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="LP_Checkbox" onclick="LP_CheckboxEvent()" >
+					<label class="form-check-label" for="inlineCheckbox3">Linear Programming 📈 </label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="EMA_Checkbox"  onclick="EMA_CheckboxEvent()">
+					<label class="form-check-label" for="inlineCheckbox2">Exponential Moving Average 📊 </label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="DQN_Checkbox" onclick="DQN_CheckboxEvent()">
+					<label class="form-check-label" for="inlineCheckbox1">Deep Q-Network 🤖 </label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="DDQN_Checkbox" onclick="DDQN_CheckboxEvent()">
+					<label class="form-check-label" for="inlineCheckbox1">Double Deep Q-Network 🤖 🤖</label>
+				</div>
 			</div>
 		</div>
 		
@@ -126,18 +130,16 @@
 			<div class="loader" id="loader_1"></div>
 
 			<div class="slidecontainer">
-				<input type="range" min="1" max="100" value="50" class="slider" onchange="DateChanged()" >
+				<input type="range" min="1" value="50" class="slider" oninput="DateDraged()" onchange="DateChanged()" >
 				<h3 class="currentDate" style="text-align: center;"></h3>
 			</div>
-		
-		
 		</div>
 										<!-- END -->
 										<!-- Discriptions-2 START -->
 		<div style="background-color: #A1CFCF; padding-top: 50px;">
 			<div class="container" style="margin-top: 20px; margin-bottom: 30px; "> 
 				<div class="row align-items-center">
-					<div class="col-lg-8 col-md-8 col-sm-12">
+					<div class="col-lg-8 col-md-12 col-sm-12">
 						<div>
 							<h3> <b>Reinforcement Learning (RL)</b></h3>
 							<p> 
@@ -158,7 +160,7 @@
 							</p>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-4 col-sm-12" id='chart_2_container'>
+					<div class="col-lg-4 col-md-12 col-sm-12" id='chart_2_container'>
 						<canvas id="chart_2" style="height: 300px; width: 300px;"></canvas>
 					</div>
 			</div>
@@ -167,59 +169,82 @@
 
 		<div class="container">
 			<div class="row align-items-center">
-				<div class="col-lg-9 col-md-8 col-sm-12">
+				<div class="col-lg-7 col-md-12 col-sm-12">
+					<h3> ... Currently under development ... </h3>
 					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic sequi impedit optio non eaque ipsa quod, officiis ipsum ex sit exercitationem nostrum quas itaque. Voluptatem vel quas iste similique odit.</p>
 				</div>
-				<div class="col-lg-3 col-md-4 col-sm-12">
-					<div class="row">
-						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							<H4>DQN</H4>
+				<div class="col-lg-5 col-md-12 col-sm-12">
+					<div class="row justify-content-center align-items-center" style="margin-bottom: 30px;">		
+						<div class="Strategies col-lg-4 col-md-4 col-sm-4 col-xs-4">
+							<H4>DQN & DDQN <br/> Strategy </H4>
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="DQN_S" id="DQN_S1" checked>
+								<input class="form-check-input" type="radio" name="StrategyInput" value="S1" checked>
 								<label class="form-check-label" for="exampleRadios1">
-									Strategy 1
+									1
 								</label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="DQN_S" id="DQN_S2" >
+								<input class="form-check-input" type="radio" name="StrategyInput" value="S2" >
 								<label class="form-check-label" for="exampleRadios2">
-									Strategy 2
+									2
 								</label>
 							</div>
 							<div class="form-check disabled">
-								<input class="form-check-input" type="radio" name="DQN_S" id="DQN_S3" >
+								<input class="form-check-input" type="radio" name="StrategyInput" value="S3" >
 								<label class="form-check-label" for="exampleRadios3">
-									Strategy 3
+									3
 								</label>
 							</div>
 						</div>
-						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							<H4>DDQN</H4>
+
+						<div class="EMAPeriods col-lg-4 col-md-4 col-sm-4 col-xs-4">
+							<H4>EMA Periods</H4>
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="DDQN_S" id="DDQN_S1" checked>
+								<input class="form-check-input" type="radio" name="emaInput" value="24hr" checked>
 								<label class="form-check-label" for="exampleRadios1">
-									Strategy 1
+									24-hr
 								</label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="DDQN_S" id="DDQN_S2" >
+								<input class="form-check-input" type="radio" name="emaInput" value="12hr" >
 								<label class="form-check-label" for="exampleRadios2">
-									Strategy 2
+									12-hr
 								</label>
 							</div>
 							<div class="form-check disabled">
-								<input class="form-check-input" type="radio" name="DDQN_S" id="DDQN_S3" >
+								<input class="form-check-input" type="radio" name="emaInput" value="6hr" disabled>
 								<label class="form-check-label" for="exampleRadios3">
-									Strategy 3
+									6-hr
 								</label>
 							</div>
 						</div>
+
+						<div class="Decays col-lg-4 col-md-4 col-sm-4 col-xs-4">
+							<H4>Battery Decay</H4>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="decayInput" value="e003" checked>
+								<label class="form-check-label" for="exampleRadios1">
+									exp(-0.03x)
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="decayInput" value="e001" >
+								<label class="form-check-label" for="exampleRadios2">
+									exp(-0.01x)
+								</label>
+							</div>
+	
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<button class="btn btn-primary" style="width: 200px; background-color: #8D88F2; border-width: 0px;" onclick="changeDQNStrategy()">
+							Change<br/>Parameters
+						</button>
 					</div>
 				</div>
 			</div>
 		</div>
 										<!-- END -->
-		
 		<div class="footer">
 			<p>Kaan Gun Feb. 2021</p>
 		</div>
