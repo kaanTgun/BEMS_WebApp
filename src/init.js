@@ -51,7 +51,7 @@ class Enve {
 			this.GraphedData.DataObj = DataObj;
 			
 		}catch(e){
-			console.log(e);
+			console.error(e);
 		}
 	};
 };
@@ -317,13 +317,10 @@ function CalcTotalReward(actions) {
 		const action = Number((actions[index]).toFixed(1));
 		if (0.1 == action){
 			// Buy
-			console.log(action);
 			reward -= Environment.GraphedData.DataObj.Price[index] * Environment.batteryCapacity;
 		}
 		if (-0.1 == action){
 			// Sell
-			console.log(action);
-
 			reward += Environment.GraphedData.DataObj.Price[index] * Environment.batteryCapacity;
 		}
 	};
