@@ -75,28 +75,23 @@ class Actor {
 		await Environment;
 		this.GraphedData.Actions = [];
 		this.GraphedData.SOCs = [Environment.initSOC];
+		this.GraphedData.soc = Environment.initSOC;
 
 		for (let index = 0; index < Environment.GraphedData.DataObj.Time.length; index++) {
 			let action = await this.updatePrediction([Environment.GraphedData.DataObj.Time[index], Environment.GraphedData.DataObj.Month[index], this.GraphedData.soc, Environment.GraphedData.DataObj.Price[index]]);
-
-			if (0 === action && this.GraphedData.soc+0.1 < 0.8 ){
+			if (0 === action &&  0.8 > this.GraphedData.soc+0.1 ){
+				// Buy
 				this.GraphedData.soc += 0.1;
-			};
-			if (1 === action && this.GraphedData.soc-0.1 > 0.2 ){
-				this.GraphedData.soc -= 0.1;
-			};
-			this.GraphedData.SOCs.push(this.GraphedData.soc);
-
-			let coeff = 0;
-			if ( 0 === action){
-				// Buy 
-				coeff = +0.1 
-			};
-			if (1 === action){
+				this.GraphedData.Actions.push(0.1);
+			} else if (1 === action && 0.2 < this.GraphedData.soc-0.1 ){
 				// Sell
-				coeff = -0.1 
-			};
-			this.GraphedData.Actions.push(coeff);
+				this.GraphedData.soc -= 0.1;
+				this.GraphedData.Actions.push(-0.1);
+			}
+			else{
+				this.GraphedData.Actions.push(0);
+			}
+			this.GraphedData.SOCs.push(this.GraphedData.soc);
 		};
 	}
 
@@ -290,8 +285,8 @@ async function UpdateCalcs() {
 	// Using the current values of Enve variables, recalculate and graph (Whne the dates or hours change)
 	Strategies 	= await fetchStrategies(BEMS_API);
 
-	DDQN.evalActor();
-	DQN.evalActor();
+	await DDQN.evalActor();
+	await DQN.evalActor();
 
 	Strategies['DDQN'] 	= DDQN.GraphedData;
 	Strategies['DQN'] 	= DQN.GraphedData;
@@ -320,15 +315,19 @@ function CalcTotalReward(actions) {
 
 	for (let index = 0; index < actions.length; index++) {
 		const action = Number((actions[index]).toFixed(1));
-		if (0.1 === action){
+		if (0.1 == action){
 			// Buy
+			console.log(action);
 			reward -= Environment.GraphedData.DataObj.Price[index] * Environment.batteryCapacity;
-		};
-		if (-0.1 === action){
+		}
+		if (-0.1 == action){
 			// Sell
+			console.log(action);
+
 			reward += Environment.GraphedData.DataObj.Price[index] * Environment.batteryCapacity;
-		};
+		}
 	};
+
 	return reward;
 };
 function EMA_CheckboxEvent() {
