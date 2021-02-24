@@ -132,6 +132,21 @@
 			<div class="slidecontainer">
 				<input type="range" min="1" value="50" class="slider" oninput="DateDraged()" onchange="DateChanged()" >
 				<h3 class="currentDate" style="text-align: center;"></h3>
+
+				<div class="row justify-content-center">
+					<div class="btn-group btn-group-toggle " data-toggle="buttons" style="width: 400px;">
+					<label class="btn btn-secondary">
+						<input type="radio" name="HourOptions" id="graphXAxis_24h" autocomplete="off" value='24' checked onclick="DateChanged()"> 24hr
+					</label>
+					<label class="btn btn-secondary">
+						<input type="radio" name="HourOptions" id="graphXAxis_48h" autocomplete="off" value='48' onclick="DateChanged()"> 48hr
+					</label>
+					<label class="btn btn-secondary">
+						<input type="radio" name="HourOptions" id="graphXAxis_72h" autocomplete="off" value='72' onclick="DateChanged()"> 72hr
+					</label>
+					</div>
+				</div>
+
 			</div>
 		</div>
 										<!-- END -->
@@ -174,7 +189,7 @@
 					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic sequi impedit optio non eaque ipsa quod, officiis ipsum ex sit exercitationem nostrum quas itaque. Voluptatem vel quas iste similique odit.</p>
 				</div>
 				<div class="col-lg-5 col-md-12 col-sm-12">
-					<div class="row justify-content-center align-items-center" style="margin-bottom: 30px;">		
+					<div class="row justify-content-center " style="margin-bottom: 30px;">		
 						<div class="Strategies col-lg-4 col-md-4 col-sm-4 col-xs-4">
 							<H4>DQN & DDQN <br/> Strategy </H4>
 							<div class="form-check">

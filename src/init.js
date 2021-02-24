@@ -5,14 +5,9 @@ const ModelPath = 'Assets/Models/'
 let ctx = document.getElementById('chart_1').getContext('2d');
 let ctx_2 = document.getElementById('chart_2').getContext('2d');
 
-const StartIndex = 100;
-const Steps = 48;
+const StartIndex = 94;
 const soc = 0.6;
 
-let barGraphData = {
-	Rewards:[],
-	Colors:[]
-};
 let Strategies;
 
 class Enve {
@@ -22,7 +17,7 @@ class Enve {
 		this.JsonData = JsonData;
 		this.GraphedData = {
 			StartIndex:StartIndex, 
-			Steps:Steps,
+			Steps:24,
 			DataObj:{}
 		};
 		this.setGraphedData(this.GraphedData.StartIndex, this.GraphedData.Steps);
@@ -56,9 +51,9 @@ class Enve {
 	};
 };
 class Actor {
-	constructor(path, name, InitSOC, color_) {
+	constructor(path, name, InitSOC, Color_) {
 		this.name = name;
-		this.color=color_;
+		this.Color=Color_;
 		this.Path = path;
 		this.Sess = new onnx.InferenceSession();
 		this.ModelPromise = this.Sess.loadModel(this.Path);
@@ -66,9 +61,8 @@ class Actor {
 			soc:InitSOC,
 			SOCs:[InitSOC],
 			Actions:[],
-			color:color_
-		}
-		this.evalActor();
+			Color:Color_
+		};
 	};
 
 	async evalActor(){
@@ -93,7 +87,7 @@ class Actor {
 			}
 			this.GraphedData.SOCs.push(this.GraphedData.soc);
 		};
-	}
+	};
 
 	async updatePrediction(ls_observations) {
 		let input = new onnx.Tensor(new Float32Array(ls_observations), 'float32', [1,4]);
@@ -206,16 +200,26 @@ class LineGraph{
 };
 class BarGraph{
 	constructor(ctx) {
-		this.chart = new Chart(ctx, {
+		this.Colors = [];
+		this.Rewards = [];
+		this.Strategies = Object.keys(Strategies);
+		Object.keys(Strategies).forEach(strategy => {
+			this.Colors.push(Strategies[`${strategy}`].Color);
+			this.Rewards.push(Strategies[`${strategy}`].Reward);			
+		});
+		this.chart = this.createChart(ctx);
+	};
+	createChart(ctx){
+		const chart = new Chart(ctx, {
 			type: 'bar',
 			data: {
-				labels: Object.keys(Strategies),
+				labels: this.Strategies,
 				datasets: [
 					{
 						label:'Reward $',
-						data: barGraphData.Rewards,
-						backgroundColor: barGraphData.Colors,
-						borderColor: barGraphData.Colors
+						data: this.Rewards,
+						backgroundColor: this.Colors,
+						borderColor: this.Colors
 					}]
 				},
 				options: {
@@ -226,31 +230,30 @@ class BarGraph{
 					scales: {
 						yAxes: [{
 							ticks: {
-                max: Math.round(barGraphData.Rewards[0]),
-								min:-20
+                max: Math.max(...this.Rewards),
+								min: Math.min(...this.Rewards, 0)
 							}},
 						]
 					},
 				}
-			}
-		);
-	};
+			})
+		return chart;
+	}
 };
 
 async function fetchStrategies(URL){
 	try {
 		const linprog_url = `${URL}/linprog?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}`;
 		const linprog_resp = await fetch(linprog_url);
-		linprog = await linprog_resp.json();
+		let linprog = await linprog_resp.json();
 		linprog.SOCs.unshift(Environment.initSOC);
-		linprog.color =  '#99EF7F';
-
+		linprog.Color =  '#99EF7F';
 
 		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=6`;
 		const ema_resp = await fetch(ema_url);
-		ema = await ema_resp.json();
+		let ema = await ema_resp.json();
 		ema.SOCs.unshift(Environment.initSOC);
-		ema.color =  '#EFD57F';
+		ema.Color =  '#EFD57F';
 
 		return {Linprog:linprog, EMA:ema}
 	} catch (error) {
@@ -284,7 +287,6 @@ async function clearCharts(){
 async function UpdateCalcs() { 
 	// Using the current values of Enve variables, recalculate and graph (Whne the dates or hours change)
 	Strategies 	= await fetchStrategies(BEMS_API);
-
 	await DDQN.evalActor();
 	await DQN.evalActor();
 
@@ -292,11 +294,8 @@ async function UpdateCalcs() {
 	Strategies['DQN'] 	= DQN.GraphedData;
 
 	// Calculate rewards can be achieved by fallowing the Strategies
-	barGraphData.Colors = [];
-	barGraphData.Rewards = [];
 	for (const key in Strategies) {
-		barGraphData.Rewards.push(CalcTotalReward(Strategies[`${key}`].Actions));
-		barGraphData.Colors.push(Strategies[`${key}`].color);
+		Strategies[`${key}`]['Reward'] = (CalcTotalReward(Strategies[`${key}`].Actions));
 	};
 
 	if (typeof(mainGraph) == 'undefined'){
@@ -329,24 +328,27 @@ function CalcTotalReward(actions) {
 };
 function EMA_CheckboxEvent() {
 	let ckbx = document.getElementById('EMA_Checkbox');
-	mainGraph.updateGraph('EMA',Strategies.EMA, Strategies.EMA.color,  ckbx.checked);
+	mainGraph.updateGraph('EMA',Strategies.EMA, Strategies.EMA.Color,  ckbx.checked);
 };
 function DDQN_CheckboxEvent() {
 	let ckbx = document.getElementById('DDQN_Checkbox');
-	mainGraph.updateGraph('DDQN',DDQN.GraphedData,   Strategies.DDQN.color,  ckbx.checked);
+	mainGraph.updateGraph('DDQN',DDQN.GraphedData,   Strategies.DDQN.Color,  ckbx.checked);
 };
 function DQN_CheckboxEvent() {
 	let ckbx = document.getElementById('DQN_Checkbox');
-	mainGraph.updateGraph('DQN', DQN.GraphedData,  Strategies.DQN.color,  ckbx.checked);
+	mainGraph.updateGraph('DQN', DQN.GraphedData,  Strategies.DQN.Color,  ckbx.checked);
 };
 function LP_CheckboxEvent() {
 	let ckbx = document.getElementById('LP_Checkbox');
-	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, Strategies.Linprog.color,  ckbx.checked);
+	mainGraph.updateGraph('Linear Programming',Strategies.Linprog, Strategies.Linprog.Color,  ckbx.checked);
 };
 function DateChanged(){
+	const hour = document.querySelector('input[name="HourOptions"]:checked').value;
+
 	const newDateID = document.getElementsByClassName('slider')[0].value;
 	const newDate = Environment.JsonData[newDateID].Date;
-	Environment.setGraphedData(newDateID, Steps);
+
+	Environment.setGraphedData(newDateID, hour);
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
 	UpdateCalcs()
 };
@@ -355,31 +357,35 @@ function DateDraged() {
 	const newDate = Environment.JsonData[newDateID].Date;
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
 	
-}
+};
 
 async function changeDQNStrategy() {
 	const DQNStrategy = document.querySelector('input[name="StrategyInput"]:checked').value;
 	const emaParam = document.querySelector('input[name="emaInput"]:checked').value;
 	const decayParam = document.querySelector('input[name="decayInput"]:checked').value;
 
-	if (DQNStrategy == "S1"){
-		const DDQNModelPath = `${ModelPath}/DDQN_Long_${DQNStrategy}.onnx`;
-		const DQNModelPath = `${ModelPath}/DQN_Long_${DQNStrategy}.onnx`;
-	} else{
-		const DDQNModelPath = `${ModelPath}/DDQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
-		const DQNModelPath = `${ModelPath}/DQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
+	let DDQNModelPath = `${ModelPath}DDQN_Long_S1.onnx`;
+	let DQNModelPath = `${ModelPath}DQN_Long_S1.onnx`;
+
+	try {
+		if (DQNStrategy != "S1"){
+			DDQNModelPath 	= `${ModelPath}DDQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
+			DQNModelPath 		= `${ModelPath}DQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
+		};
+
+		DDQN	= await new Actor(DDQNModelPath, 'DDQN', Environment.initSOC, '#A1A1CF');
+		DQN		= await new Actor(DQNModelPath, 'DQN', Environment.initSOC, '#EF7FE3');
+		await UpdateCalcs();
+
+	} catch (error) {
+		console.error(error);
 	}
-
-	DDQN	= await new Actor(DDQNModelPath, 'DDQN', Environment.initSOC, '#A1A1CF');
-	DQN		= await new Actor(DQNModelPath, 'DQN', Environment.initSOC, '#EF7FE3');
-	await UpdateCalcs();
 };
-
 
 loadData(DatasetPath).then(async JSON_DATA => {
 	Environment = new Enve(JSON_DATA, soc);
-	DDQN				= await new Actor(`${ModelPath}/DDQN_Long_S1.onnx`, 'DDQN', Environment.initSOC, '#A1A1CF');
-	DQN					= await new Actor(`${ModelPath}/DQN_Long_S1.onnx`, 'DQN', Environment.initSOC, '#EF7FE3');
+	DDQN				= await new Actor(`${ModelPath}DDQN_Long_S1.onnx`, 'DDQN', Environment.initSOC, '#A1A1CF');
+	DQN					= await new Actor(`${ModelPath}DQN_Long_S1.onnx`, 'DQN', Environment.initSOC, '#EF7FE3');
 	document.getElementsByClassName("currentDate")[0].innerHTML = Environment.JsonData[StartIndex].Date;
 	await UpdateCalcs();
 });
