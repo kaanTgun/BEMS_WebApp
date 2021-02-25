@@ -15,13 +15,14 @@ class Enve {
 		this.batteryCapacity = 100;
 		this.initSOC = initSOC;
 		this.JsonData = JsonData;
+		this.EMAWindow = 6;
 		this.GraphedData = {
 			StartIndex:StartIndex, 
 			Steps:24,
 			DataObj:{}
 		};
 		this.setGraphedData(this.GraphedData.StartIndex, this.GraphedData.Steps);
-		document.getElementsByClassName('slider')[0].setAttribute('max', this.JsonData.length -100);
+		document.getElementsByClassName('slider')[0].setAttribute('max', this.JsonData.length -250);
 		document.getElementsByClassName('slider')[0].setAttribute('value', this.GraphedData.StartIndex);
 	};
 	setGraphedData(srtIndex, step) {
@@ -249,7 +250,7 @@ async function fetchStrategies(URL){
 		linprog.SOCs.unshift(Environment.initSOC);
 		linprog.Color =  '#99EF7F';
 
-		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=6`;
+		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=${Environment.EMAWindow}`;
 		const ema_resp = await fetch(ema_url);
 		let ema = await ema_resp.json();
 		ema.SOCs.unshift(Environment.initSOC);
@@ -289,13 +290,17 @@ async function UpdateCalcs() {
 	Strategies 	= await fetchStrategies(BEMS_API);
 	await DDQN.evalActor();
 	await DQN.evalActor();
-
+	
 	Strategies['DDQN'] 	= DDQN.GraphedData;
 	Strategies['DQN'] 	= DQN.GraphedData;
 
 	// Calculate rewards can be achieved by fallowing the Strategies
 	for (const key in Strategies) {
-		Strategies[`${key}`]['Reward'] = (CalcTotalReward(Strategies[`${key}`].Actions));
+		try {
+			Strategies[`${key}`]['Reward'] = (CalcTotalReward(Strategies[`${key}`].Actions));
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	if (typeof(mainGraph) == 'undefined'){
@@ -347,6 +352,7 @@ function DateChanged(){
 
 	const newDateID = document.getElementsByClassName('slider')[0].value;
 	const newDate = Environment.JsonData[newDateID].Date;
+	console.log(newDateID);
 
 	Environment.setGraphedData(newDateID, hour);
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;

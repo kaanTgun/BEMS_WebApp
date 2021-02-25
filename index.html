@@ -33,13 +33,11 @@
 						About this project 
 						</b> 
 					</h3>
-					<p style="margin-bottom:300px">
-						The energy arbitrage problem is one of the main links to allow a microgrid function smoothly. 
-						The idea is simple, buy power from the grid at a low price, charge the batteries, sell the power back when the price gets high. 
-						Although this sounds bad, it is super beneficial to improve great stability. 
-						High prices occur when the electricity demand is high, so, less efficient power generators such as diesel power plants are being used to compensate the supply demand difference. 
-						Using large batteries would help lower the stress on the power grid and make the system much stable. 
-						The question becomes, how can we schedule a charge-discharge cycle what is battery systems?
+					<p style="margin-bottom:400px">
+						The electricity grid functions in a real-time environment where the demand must be met by supply 
+						at all time. With the increased adaptation of renewable resources, it is more important than ever 
+						to balance the power grid and avoid any power shortages. 
+						This project is an interactive and visual representation of control strategies used to solve the energy arbitrage problem. 
 					</p>
 				</div>
 			</div>
@@ -48,6 +46,25 @@
 
 		<div style="background-color:#EFD57F;">
 			<div class="container">
+				<h4 style="padding-top: 40px;">
+					What is the energy arbitrage problem?
+				</h4>
+				<div>
+					The idea is simple, power grid functions like the real-time market. 
+					The price of power depends on the balance of supply and demand.
+					If the demand is low, the price of power drops, shifting the power production to lower-cost resources, such as wind, solar, hydro or nuclear. 
+					When the demand is high, the grid operator either spins up less efficient generators or buys power from other 
+					operators to compensate the demand causing the price of power to increase. 
+					<br/>
+					<br/>
+					The increased penetration of renewables is causing unpredictability in power generation which conveys an unstable 
+					grid and swinging electricity prices. With the help of large energy storage solutions, these problems can be overcome 
+					allowing for a larger renewable present. One of the more favored energy storage solutions is grid integrated batteries 
+					due to their fast response time. Assuming the existence of the grid integrated batteries, with the historic hourly electricity data,
+					an algorithm is needed to decide to buy, sell or hold power in a given time. Finding an optimal solution becomes especially challenging 
+					due to the unpredictability of the price of power. The purpose of this project is to compare various algorithms 
+					and strategies to find the optimal control strategy.
+				</div>
 				<h4 style="padding-top: 40px;">
 					<b>
 						Few things to keep in mind:
@@ -130,23 +147,23 @@
 			<div class="loader" id="loader_1"></div>
 
 			<div class="slidecontainer">
-				<input type="range" min="1" value="50" class="slider" oninput="DateDraged()" onchange="DateChanged()" >
+				<input type="range" min="24" value="50" class="slider" oninput="DateDraged()" onchange="DateChanged()" >
 				<h3 class="currentDate" style="text-align: center;"></h3>
 
 				<div class="row justify-content-center">
-					<div class="btn-group btn-group-toggle " data-toggle="buttons" style="width: 400px;">
-					<label class="btn btn-secondary">
+					<div class="btn-group btn-group-toggle " data-toggle="buttons" style="width: 400px; ">
+					<label class="btn btn-secondary" >
 						<input type="radio" name="HourOptions" id="graphXAxis_24h" autocomplete="off" value='24' checked onclick="DateChanged()"> 24hr
 					</label>
-					<label class="btn btn-secondary">
+					<label class="btn btn-secondary" >
 						<input type="radio" name="HourOptions" id="graphXAxis_48h" autocomplete="off" value='48' onclick="DateChanged()"> 48hr
 					</label>
-					<label class="btn btn-secondary">
+					<label class="btn btn-secondary" >
 						<input type="radio" name="HourOptions" id="graphXAxis_72h" autocomplete="off" value='72' onclick="DateChanged()"> 72hr
 					</label>
 					</div>
 				</div>
-
+				
 			</div>
 		</div>
 										<!-- END -->
