@@ -7,7 +7,6 @@ let ctx_2 = document.getElementById('chart_2').getContext('2d');
 
 const StartIndex = 94;
 const soc = 0.6;
-
 let Strategies;
 
 class Enve {
