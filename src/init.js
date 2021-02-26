@@ -374,7 +374,11 @@ async function changeDQNStrategy() {
 	let DQNModelPath = `${ModelPath}DQN_Long_S1.onnx`;
 
 	try {
-		if (DQNStrategy != "S1"){
+		if (DQNStrategy == "S2"){
+			DDQNModelPath 	= `${ModelPath}DDQN_Long_${DQNStrategy}_${emaParam}.onnx`;
+			DQNModelPath 		= `${ModelPath}DQN_Long_${DQNStrategy}_${emaParam}.onnx`;
+		};
+		if (DQNStrategy == "S3"){
 			DDQNModelPath 	= `${ModelPath}DDQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
 			DQNModelPath 		= `${ModelPath}DQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
 		};

@@ -50,20 +50,24 @@
 					What is the energy arbitrage problem?
 				</h4>
 				<div>
+					<p>
+
 					The idea is simple, power grid functions like the real-time market. 
 					The price of power depends on the balance of supply and demand.
 					If the demand is low, the price of power drops, shifting the power production to lower-cost resources, such as wind, solar, hydro or nuclear. 
-					When the demand is high, the grid operator either spins up less efficient generators or buys power from other 
-					operators to compensate the demand causing the price of power to increase. 
+					When the demand is high, the grid operator either spins up less efficient generators or buy power from other 
+					operators to compensate for the demand causing the price of power to increase. 
 					<br/>
 					<br/>
+					
 					The increased penetration of renewables is causing unpredictability in power generation which conveys an unstable 
 					grid and swinging electricity prices. With the help of large energy storage solutions, these problems can be overcome 
-					allowing for a larger renewable present. One of the more favored energy storage solutions is grid integrated batteries 
+					allowing for a larger renewable presence. One of the more favored energy storage solutions is grid integrated batteries 
 					due to their fast response time. Assuming the existence of the grid integrated batteries, with the historic hourly electricity data,
 					an algorithm is needed to decide to buy, sell or hold power in a given time. Finding an optimal solution becomes especially challenging 
 					due to the unpredictability of the price of power. The purpose of this project is to compare various algorithms 
 					and strategies to find the optimal control strategy.
+					</p>
 				</div>
 				<h4 style="padding-top: 40px;">
 					<b>
@@ -88,13 +92,16 @@
 		<div style="background-color: #A1CFCF; padding-top: 50px;">
 			<div class="container">
 				<div>
-					<h5 > 
+					<h5> 
 						<b>Linear Programming (LP)</b>
 					</h5>
 					<p>
-						LP is a methodology used to find a global optimum in a linearly defined space.
-						Which means that, assuming we can predict the price of power perfectly, we can find the maximum amount of profit or reward we can gain by fallowing the linear programming strategy.
-						In a real-world scenario it is impossible to predict the feature perfectly, so we will use the linear programming strategy as a scale to compare other control strategies.
+						LP is a methodology used to find a global optimum in a linearly defined space. 
+						Which in this case, assuming the price of power is known for a defined period, 
+						it is possible to find the optimal charging strategy. Thus, the maximum amount 
+						of reward or money that can be made is determined by this optimal solution. In a 
+						real-world scenario, it is impossible to predict the feature perfectly. 
+						However, it can be used as a benchmark to compare the performances of other control strategies.
 					</p>
 				</div>
 				<div class="row align-items-center" style="padding-bottom: 50px;" >
@@ -105,16 +112,72 @@
 						</h5>
 						<div class="align-self-center">
 							<p class="text-justify">
-								EMA is a type of mean average calculation in a given dataset however, it places a larger weight to the most recent value. 
-								Compared to linear programming this strategy does not require for us to know the feature price of power to make the charging or discharging decision.
-								This is an extremely simple and efficient algorithm. It only requires us to know past few hours of price data to make the decision of buying or selling power from the grid. 
-								The algorithm simply says; buy power from the grid if the current electricity price is lower than EMA and sell if it is higher. Exponential Mean Average is also a widely used strategy by day-traders to evaluate stocks prices.
-						</p>
+								EMA is a type of mean average calculation with the difference of, placing a larger 
+								weight on the most recent data points. Compared to linear programming, this strategy 
+								does not require to hold knowledge on the feature. It requires a limited number of past 
+								observations to determine if the current price is higher or lower than the average. When 
+								the price dips below the EMA and the battery is below the max SOC, 
+								it starts charging, and the other way around. Although it sounds simple, this strategy is widely used by day-traders.
+							</p>
 						</div>
+
 					</div>
 					<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
 						<img src="Assets/EMA.png" class="img-fluid" alt="Responsive image" style="border-radius: 7px;"/>
 					</div>
+				
+				<div class="row align-items-center" style="padding-bottom: 50px;">
+
+					<div class="col-lg-8 col-md-7 col-sm-6 col-xs-12" >
+						<div>
+							<h5>
+								<b>
+									Reinforcement Learning (RL)
+								</b>
+							</h5>
+							<p>
+								Reinforcement Learning is not a new concept; however, it became famous after 
+								DeepMind team published a groundbreaking paper called ‘Human-Level Control Through 
+								Deep Reinforcement Learning’ in 2015. They found a solution to successfully coupled neural 
+								networks with reinforcement learning and achieve human-level control in Atari games. 
+							</p>
+						</div>
+						<div>
+							<h5>
+								<b>
+									Deep Q-Learning
+								</b>
+							</h5>
+							<p>
+								DQL consists of an agent (actor) and an environment. The agent intakes observations 
+								from the environment evaluate its’ current polity and return the best possible action. 
+								This action produces a new state and reward, by the environment. 
+								This cycle continues until the end of the episode. The goal of the agent is to maximize the reward received at each episode. 
+							</p>
+							<p>
+								In this project, the state variables are set as the current price-of-power, 
+								time, month and the state-of-charge. The agents’ action space is limited to buying,
+								selling or stalling electricity. Considering the size of the environment and the need to evaluate unseen states, 
+								a differentiable policy is needed. Thus, a fully connected two-layer neural network was used as the policy network.
+								The word “deep” in DQN comes from the existence of deep learning.  
+							</p>	
+							<p>
+								Deep Q-Learning is a model-free reinforcement learning technique meaning, 
+								the agent does not require a predefined knowledge of the environment. To optimize its policy, 
+								DQL uses experience replay and Temporal Difference (TD) error, taking advantage of the episodic environment.
+							</p>	
+						</div>
+
+					</div>
+					
+					<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 " >
+						<div class="row align-items-center">
+							<img src="Assets/RL.png " class="img-fluid" alt="Responsive image" style="margin-top: 30px;">
+							<img src="Assets/NN.png" class="img-fluid" alt="Responsive image" style="margin-top: 30px;">
+						</div>
+					</div>
+				</div>
+
 				</div>
 
 			</div>		
@@ -170,25 +233,34 @@
 										<!-- Discriptions-2 START -->
 		<div style="background-color: #A1CFCF; padding-top: 50px;">
 			<div class="container" style="margin-top: 20px; margin-bottom: 30px; "> 
-				<div class="row align-items-center">
+				<div class="row justify-content-center ">
 					<div class="col-lg-8 col-md-12 col-sm-12">
+
+						<h4><b>Environment:</b></h4> 
+						<p>
+							Using a grid search method, multiple agents were trained to 
+							determine the impact of the hyperparameters on the optimal policy. 
+							Three major environment strategies were set and the influence on the final 
+							optimal strategy can be seen. Various episode lengths, 
+							ranging from 24 to 200hrs were testes for each DQN and DDQN finding, in
+							long episodes DQN suffers significantly from optimization bias. 
+						</p>
 						<div>
-							<h3> <b>Reinforcement Learning (RL)</b></h3>
-							<p> 
-								Reinforcement Learning is not a new concept; however, it became famous after the DeepMind team published a groundbreaking paper called ‘Human-Level Control Through Deep Reinforcement Learning’ in 2015. 
-								They were able to combine reinforcement learning with neural networks to achieve human-level control in Atari games. 
-							</p>
-							<h3> <b>Deep Q-Learning</b></h3>
+							<h5><b>Strategy 1:</b></h5>
 							<p>
-								DeepMind called this system Deep Q-Learning where the agent stores a finite amount of past information about its past observations (state), actions and rewards.
-								It uses these past experiences to evaluate and find a policy to maximize its reward (in our case the maximum amount of profit it can generate).
+								The reward function is simple, amount of power bought (-) 
+								or sold (+) multiplied by the current price.
 							</p>
+							<h5><b>Strategy 2:</b></h5>
 							<p>
-								It can be easier to think of this system like a robot or most properly an Agent is looking around, 
-								understanding the environment and making decisions to maximize its reward like a videogame! 
-								The agent only knows its current state these are the Current Price of Power, Current Time, Month and the State of Charge of the Battery (%) so what is seen is limited. It needs to decide in every time step. Should it sell 
-								some power and make some money (earn reward), or should it buy some to sell later at a higher price? Or should it simply stall until the price changes? 
-								The only way the agent can learn how to make this decision is to experience many states and try to improve its polity (what action to take when).
+								The reward function includes a coefficient determined
+								by EMA. This coefficient rewards the agent if the power bought below average or sold over average price. 
+							</p>
+							<h5><b>Strategy 3:</b></h5>
+							<p>
+								The reward function includes a coefficient determined by the combination of EMA and the cycle decay. 
+								The cycle decay was modeled by a negative exponential function. 
+								With each taken action, the battery cycle was counted, and the cycle decay was determined and added to the reward coefficient. 
 							</p>
 						</div>
 					</div>
