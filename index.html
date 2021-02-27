@@ -41,7 +41,6 @@
 					</p>
 				</div>
 			</div>
-
 		</div>
 
 		<div style="background-color:#EFD57F;">
@@ -51,7 +50,6 @@
 				</h4>
 				<div>
 					<p>
-
 					The idea is simple, power grid functions like the real-time market. 
 					The price of power depends on the balance of supply and demand.
 					If the demand is low, the price of power drops, shifting the power production to lower-cost resources, such as wind, solar, hydro or nuclear. 
@@ -59,7 +57,6 @@
 					operators to compensate for the demand causing the price of power to increase. 
 					<br/>
 					<br/>
-					
 					The increased penetration of renewables is causing unpredictability in power generation which conveys an unstable 
 					grid and swinging electricity prices. With the help of large energy storage solutions, these problems can be overcome 
 					allowing for a larger renewable presence. One of the more favored energy storage solutions is grid integrated batteries 
@@ -103,6 +100,7 @@
 						real-world scenario, it is impossible to predict the feature perfectly. 
 						However, it can be used as a benchmark to compare the performances of other control strategies.
 					</p>
+					<img src="Assets/LP_equations.png" class="img-fluid" alt="Responsive image">
 				</div>
 				<div class="row align-items-center" style="padding-bottom: 50px;" >
 					<div class="clearfix"></div>
@@ -125,6 +123,8 @@
 					<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
 						<img src="Assets/EMA.png" class="img-fluid" alt="Responsive image" style="border-radius: 7px;"/>
 					</div>
+					<img src="Assets/EMA_equations.png" class="img-fluid" alt="Responsive image" style="width: 900px;">
+
 				
 				<div class="row align-items-center" style="padding-bottom: 50px;">
 
@@ -167,7 +167,11 @@
 								DQL uses experience replay and Temporal Difference (TD) error, taking advantage of the episodic environment.
 							</p>	
 						</div>
-
+						<div class="row justify-content-center">
+							<div class="col-lg-10 col-md-12 col-sm-12">
+								<img src="Assets/DQN_equation.png">
+							</div>
+						</div>
 					</div>
 					
 					<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 " >
@@ -238,30 +242,45 @@
 
 						<h4><b>Environment:</b></h4> 
 						<p>
-							Using a grid search method, multiple agents were trained to 
+							Using a grid search method, 36 agents were trained to 
 							determine the impact of the hyperparameters on the optimal policy. 
 							Three major environment strategies were set and the influence on the final 
 							optimal strategy can be seen. Various episode lengths, 
 							ranging from 24 to 200hrs were testes for each DQN and DDQN finding, in
 							long episodes DQN suffers significantly from optimization bias. 
 						</p>
-						<div>
+						<div style="justify-content: center;">
 							<h5><b>Strategy 1:</b></h5>
 							<p>
 								The reward function is simple, amount of power bought (-) 
 								or sold (+) multiplied by the current price.
 							</p>
+							<div class="row justify-content-center ">
+								<div class="col-lg-8 col-md-12 col-sm-12">
+									<img src="Assets/Strat1_pseudocode.png">
+								</div>
+							</div>
 							<h5><b>Strategy 2:</b></h5>
 							<p>
 								The reward function includes a coefficient determined
 								by EMA. This coefficient rewards the agent if the power bought below average or sold over average price. 
 							</p>
+							<div class="row justify-content-center ">
+								<div class="col-lg-8 col-md-12 col-sm-12">
+									<img src="Assets/Strat2_pseudocode.png">
+								</div>
+							</div>
 							<h5><b>Strategy 3:</b></h5>
 							<p>
 								The reward function includes a coefficient determined by the combination of EMA and the cycle decay. 
 								The cycle decay was modeled by a negative exponential function. 
 								With each taken action, the battery cycle was counted, and the cycle decay was determined and added to the reward coefficient. 
 							</p>
+							<div class="row justify-content-center">
+								<div class="col-lg-8 col-md-12 col-sm-12">
+									<img src="Assets/Strat3_pseudocode.png">
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="col-lg-4 col-md-12 col-sm-12" id='chart_2_container'>

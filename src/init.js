@@ -249,7 +249,7 @@ async function fetchStrategies(URL){
 		linprog.SOCs.unshift(Environment.initSOC);
 		linprog.Color =  '#99EF7F';
 
-		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=${Environment.EMAWindow}`;
+		const ema_url = `${URL}/ema?soc=${Environment.initSOC}&index=${Environment.GraphedData.StartIndex}&len=${Environment.GraphedData.Steps}&window=24`;
 		const ema_resp = await fetch(ema_url);
 		let ema = await ema_resp.json();
 		ema.SOCs.unshift(Environment.initSOC);
@@ -284,7 +284,7 @@ async function clearCharts(){
 	barGraph = await new BarGraph(ctx_2);
 
 };
-async function UpdateCalcs() { 
+async function updateCalcs() { 
 	// Using the current values of Enve variables, recalculate and graph (Whne the dates or hours change)
 	Strategies 	= await fetchStrategies(BEMS_API);
 	await DDQN.evalActor();
@@ -355,7 +355,7 @@ function DateChanged(){
 
 	Environment.setGraphedData(newDateID, hour);
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
-	UpdateCalcs()
+	updateCalcs()
 };
 function DateDraged() {
 	const newDateID = document.getElementsByClassName('slider')[0].value;
@@ -384,7 +384,7 @@ async function changeDQNStrategy() {
 
 		DDQN	= await new Actor(DDQNModelPath, 'DDQN', Environment.initSOC, '#A1A1CF');
 		DQN		= await new Actor(DQNModelPath, 'DQN', Environment.initSOC, '#EF7FE3');
-		await UpdateCalcs();
+		await updateCalcs();
 
 	} catch (error) {
 		console.error(error);
@@ -396,5 +396,5 @@ loadData(DatasetPath).then(async JSON_DATA => {
 	DDQN				= await new Actor(`${ModelPath}DDQN_Long_S1.onnx`, 'DDQN', Environment.initSOC, '#A1A1CF');
 	DQN					= await new Actor(`${ModelPath}DQN_Long_S1.onnx`, 'DQN', Environment.initSOC, '#EF7FE3');
 	document.getElementsByClassName("currentDate")[0].innerHTML = Environment.JsonData[StartIndex].Date;
-	await UpdateCalcs();
+	await updateCalcs();
 });
