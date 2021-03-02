@@ -246,8 +246,8 @@
 		<div style="background-color: #A1CFCF; padding-top: 50px;">
 			<div class="container" style="margin-top: 20px;"> 
 				<div class="row justify-content-center ">
-					<div class="col-lg-8 col-md-12 col-sm-12">
 
+					<div class="col-lg-6 col-md-12 col-sm-12">
 						<h4><b>Environment:</b></h4> 
 						<p>
 							Using a grid search method, 36 agents were trained to 
@@ -268,30 +268,10 @@
 									<img src="Assets/Strat1_pseudocode.png">
 								</div>
 							</div>
-							<h5><b>Strategy 2:</b></h5>
-							<p>
-								The reward function includes a coefficient determined
-								by EMA. This coefficient rewards the agent if the power bought below average or sold over average price. 
-							</p>
-							<div class="row justify-content-center ">
-								<div class="col-lg-8 col-md-12 col-sm-12">
-									<img src="Assets/Strat2_pseudocode.png" style="margin-bottom: 5px;">
-								</div>
-							</div>
-							<h5><b>Strategy 3:</b></h5>
-							<p>
-								The reward function includes a coefficient determined by the combination of EMA and the cycle decay. 
-								The cycle decay was modeled by a negative exponential function. 
-								With each taken action, the battery cycle was counted, and the cycle decay was determined and added to the reward coefficient. 
-							</p>
-							<div class="row justify-content-center">
-								<div class="col-lg-8 col-md-12 col-sm-12">
-									<img src="Assets/Strat3_pseudocode.png" style="margin-bottom: 15px;">
-								</div>
-							</div>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-12 col-sm-12" id='chart_2_container'>
+
+					<div class="col-lg-6 col-md-12 col-sm-12" id='changeDQNStrategy'>
 						<div class="row justify-content-center ">
 							<h3> Change Environment Variables </h3> 
 							<br/>	
@@ -361,11 +341,40 @@
 							<button class="btn btn-primary" style="width: 200px; background-color: #8D88F2; border-width: 0px;" onclick="changeDQNStrategy()">
 								Change<br/>Parameters
 							</button>
-						</div>
-
-						
+						</div>						
 					</div>
 				</div>
+
+				<div class="row justify-content-center ">
+					<div class="col-lg-6 col-md-12 col-sm-12">
+						<h5><b>Strategy 2:</b></h5>
+						<p>
+							The reward function includes a coefficient determined
+							by EMA. This coefficient rewards the agent if the power bought below average or sold over average price. 
+						</p>
+						<div class="row justify-content-center ">
+							<div class="col-lg-8 col-md-12 col-sm-12">
+								<img src="Assets/Strat2_pseudocode.png" style="margin-bottom: 5px;">
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-12 col-sm-12">
+						<h5><b>Strategy 3:</b></h5>
+						<p>
+							The reward function includes a coefficient determined by the combination of EMA and the cycle decay. 
+							The cycle decay was modeled by a negative exponential function. 
+							With each taken action, the battery cycle was counted, and the cycle decay was determined and added to the reward coefficient. 
+						</p>
+						<div class="row justify-content-center">
+							<div class="col-lg-8 col-md-12 col-sm-12">
+								<img src="Assets/Strat3_pseudocode.png" style="margin-bottom: 15px;">
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+
 			</div>
 		</div>
 										<!-- END -->

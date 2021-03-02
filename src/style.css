@@ -2,6 +2,13 @@ p{
 	margin: 25px;
 }
 
+#changeDQNStrategy{
+	background-color: white;
+	margin-bottom: 100px;
+	margin-top: 10px;
+	border-radius: 10px;
+	border: #A1CFCF;
+}
 
 .page-header{
 	min-width: 500px;

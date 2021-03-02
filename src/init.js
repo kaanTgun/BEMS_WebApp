@@ -272,7 +272,6 @@ async function clearCharts(){
 	document.getElementById("EMA_Checkbox").checked = false;
 	document.getElementById("DQN_Checkbox").checked = false;
 	document.getElementById("DDQN_Checkbox").checked = false;
-	document.getElementById("chart_2_container").style.height = "300px";
 
 	// Get the context of the canvas element we want to select
 	mainGraph = await new LineGraph(ctx);
