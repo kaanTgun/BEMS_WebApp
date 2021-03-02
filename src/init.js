@@ -207,10 +207,7 @@ class BarGraph{
 			this.Colors.push(Strategies[`${strategy}`].Color);
 			this.Rewards.push(Strategies[`${strategy}`].Reward);			
 		});
-		this.chart = this.createChart(ctx);
-	};
-	createChart(ctx){
-		const chart = new Chart(ctx, {
+		this.chart = new Chart(ctx, {
 			type: 'bar',
 			data: {
 				labels: this.Strategies,
@@ -230,15 +227,14 @@ class BarGraph{
 					scales: {
 						yAxes: [{
 							ticks: {
-                max: Math.max(...this.Rewards),
+                max: Math.max(...this.Rewards)+2,
 								min: Math.min(...this.Rewards, 0)
 							}},
 						]
 					},
 				}
 			})
-		return chart;
-	}
+	};
 };
 
 async function fetchStrategies(URL){
@@ -282,7 +278,6 @@ async function clearCharts(){
 	mainGraph = await new LineGraph(ctx);
 	document.getElementById("chart_1").style.display = "block";
 	barGraph = await new BarGraph(ctx_2);
-
 };
 async function updateCalcs() { 
 	// Using the current values of Enve variables, recalculate and graph (Whne the dates or hours change)
@@ -363,7 +358,6 @@ function DateDraged() {
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
 	
 };
-
 async function changeDQNStrategy() {
 	const DQNStrategy = document.querySelector('input[name="StrategyInput"]:checked').value;
 	const emaParam = document.querySelector('input[name="emaInput"]:checked').value;
@@ -390,7 +384,6 @@ async function changeDQNStrategy() {
 		console.error(error);
 	}
 };
-
 loadData(DatasetPath).then(async JSON_DATA => {
 	Environment = new Enve(JSON_DATA, soc);
 	DDQN				= await new Actor(`${ModelPath}DDQN_Long_S1.onnx`, 'DDQN', Environment.initSOC, '#A1A1CF');
