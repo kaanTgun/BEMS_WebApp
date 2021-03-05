@@ -253,15 +253,15 @@
 							Using a grid search method, 36 agents were trained to 
 							determine the impact of the hyperparameters on the optimal policy. 
 							Three major environment strategies were set and the influence on the final 
-							optimal strategy can be seen. Three episode lengths, 
-							(24-48)hr, (48-100)hr and (100-200)hr were testes for each DQN and DDQN strategy.
+							optimal strategy can be seen. Also, for each DQN and DDQN strategy three episode lengths, 
+							(24-48)hr, (48-100)hr and (100-200)hr were testes. 
 							While the DDQN thrived in the long episodic environments, DQN suffered significantly from maximization bias.
 						</p>
 						<div style="justify-content: center;">
 							<h5><b>Strategy 1:</b></h5>
 							<p>
-								The reward function is simple, amount of power bought (-) 
-								or sold (+) multiplied by the current price.
+								The reward function is simple, the amount 
+								of power bought (-) or sold (+) multiplied by the current price.
 							</p>
 							<div class="row justify-content-center " style="margin-bottom: 5px;">
 								<div class="col-lg-8 col-md-12 col-sm-12">
@@ -313,7 +313,7 @@
 									</label>
 								</div>
 								<div class="form-check disabled">
-									<input class="form-check-input" type="radio" name="emaInput" value="6hr" disabled>
+									<input class="form-check-input" type="radio" name="emaInput" value="6hr" >
 									<label class="form-check-label" for="exampleRadios3">
 										6-hr
 									</label>
@@ -338,7 +338,7 @@
 
 						</div>
 						<div class="row justify-content-center">
-							<button class="btn btn-primary" style="width: 200px; background-color: #8D88F2; border-width: 0px;" onclick="changeDQNStrategy()">
+							<button class="btn btn-primary" style="width: 200px; background-color: #8D88F2; border-width: 0px;" onclick="changeDQNStrategyEvent()">
 								Change<br/>Parameters
 							</button>
 						</div>						
@@ -349,8 +349,9 @@
 					<div class="col-lg-6 col-md-12 col-sm-12">
 						<h5><b>Strategy 2:</b></h5>
 						<p>
-							The reward function includes a coefficient determined
-							by EMA. This coefficient rewards the agent if the power bought below average or sold over average price. 
+							The reward function includes a 
+							coefficient determined by EMA. This coefficient rewards the 
+							agent if the power bought below average or sold over the average price. 
 						</p>
 						<div class="row justify-content-center ">
 							<div class="col-lg-8 col-md-12 col-sm-12">
@@ -361,9 +362,10 @@
 					<div class="col-lg-6 col-md-12 col-sm-12">
 						<h5><b>Strategy 3:</b></h5>
 						<p>
-							The reward function includes a coefficient determined by the combination of EMA and the cycle decay. 
-							The cycle decay was modeled by a negative exponential function. 
-							With each taken action, the battery cycle was counted, and the cycle decay was determined and added to the reward coefficient. 
+							The reward function includes a coefficient determined by the combination 
+							of EMA and the cycle decay. The cycle decay was modelled by a negative exponential 
+							function. With each taken action, the battery cycle was counted, and the cycle decay
+							was determined and added to the reward coefficient.  
 						</p>
 						<div class="row justify-content-center">
 							<div class="col-lg-8 col-md-12 col-sm-12">
@@ -372,8 +374,106 @@
 						</div>
 					</div>
 				</div>
-				
-				
+			</div>
+		</div>
+
+		<br/>
+
+		<div style="background-color: #EFD57F">
+			<div class="container">
+				<br/>
+				<br/>
+				<h2 style="text-align: center;"> <b> Results and Findings</b></h2>
+				<br/>
+				<ul>
+					<li>Test dataset ranging from 2015-05-15 02:00:00 to 
+						2015-08-04 20:00:00 consists of 2000 hr of price data.</li>
+						<li>For each control system, the initial SOC was set at 60%. 
+						</li>
+				</ul>
+
+				<div class="row justify-content-center ">
+					<div  class="col-lg-6 col-md-6 col-sm-12">
+						<br/>
+						<h4> <b> Linear Programming </b></h4>
+						<p>
+							The test dataset is large to find the optimal solution, however, 
+							it was estimated to be 14219.91 $ with 0.00001 tolerance. 
+							To obtain this value, the battery cycle count was calculated to be 81. 
+							<br/>
+							<br/>
+
+						</p>
+						<img src="Assets/LP_test_result.png" style="max-width: 100%; max-height: 100%;">
+					</div>
+
+
+					<div  class="col-lg-6 col-md-6 col-sm-6">
+						<br/>
+						<h4> <b> Exponential Mean Average </b></h4>
+						<p>
+							Four window sizes were tested, ranging from 6hr to 48hr. 
+							By using a window size of 6hrs, the reward was calculated to be 3100.88$ with 23 cycles. 
+							Increased window size (48hr) resulted in a slightly better return of 3184.32$, reaching the limit with the same cycle count. 
+						</p>
+						<img src="Assets/EMA_test_result.png" style="max-width: 100%; max-height: 100%;">
+					</div>
+
+
+				</div>
+
+				<br/>
+				<br/>
+				<br/>
+
+				<div class="row justify-content-center ">
+						<br/>
+						<h4> <b> DQN and DDQN </b></h4>
+						<p>
+							The agents trained using the 1st strategy returned a similar 
+							total reward in the medium and long sequences. DDQN trained in the mid-range 
+							produced a slightly more reward, toping 8064.00$ with 10 battery-cycle count. 
+							This result indicates that deep reinforcement learning produced a 2.5x greater return then the EMA. 
+						</p>
+					
+					<div class="row justify-content-center ">
+						<div  class="col-lg-8 col-md-8 col-sm-8">
+							<img src="Assets/S1_rewards.png" style="max-width: 100%; max-height: 100%; margin-bottom: 10px;">
+						</div>
+						<div  class="col-lg-4 col-md-4 col-sm-4 ">	
+							<img src="Assets/S1_cycles.png" style="max-width: 100%; max-height: 100%; margin-bottom: 10px;">
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<p>
+						While analysing the results using the test set, 
+						models trained with the 2nd and 3rd strategies’ rewards were also calculated using the 1st strategy. 
+					</p>
+					<p>
+						Following the 2nd and 3rd strategies, although the DQN and DDQN performances on short episodes are 
+						not distinctive, DQN agents trained in the longer episodes produced a significant performance drop. 
+						With the increased episode lengths, DQN became unstable and suffered from maximization bias. The DDQN 
+						architecture overcame this challenge producing significantly improved outcomes with a much stable strategy. 
+						The DDQN agent trained using the 3rd strategy in long episodes returned the maximum reward of 9136.00$ with only 8 cycles. 
+					</p>
+				</div>
+				<div class="row justify-content-center ">
+					<div  class="col-lg-6 col-md-6 col-sm-12">
+						<img src="Assets/S2_rewards.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;">
+						<img src="Assets/S2_cycles.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;">
+					</div>
+					<div  class="col-lg-6 col-md-6 col-sm-12 ">	
+						<div class="row justify-content-center ">
+
+							<img src="Assets/S3_rewards.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;">
+							<img src="Assets/S3_cycles.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;">
+						</div>
+					</div>
+				</div>
+
+				</div>
 
 			</div>
 		</div>

@@ -357,7 +357,7 @@ function DateDraged() {
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
 	
 };
-async function changeDQNStrategy() {
+async function changeDQNStrategyEvent() {
 	const DQNStrategy = document.querySelector('input[name="StrategyInput"]:checked').value;
 	const emaParam = document.querySelector('input[name="emaInput"]:checked').value;
 	const decayParam = document.querySelector('input[name="decayInput"]:checked').value;
