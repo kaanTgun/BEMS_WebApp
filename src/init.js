@@ -345,7 +345,6 @@ function DateChanged(){
 
 	const newDateID = document.getElementsByClassName('slider')[0].value;
 	const newDate = Environment.JsonData[newDateID].Date;
-	console.log(newDateID);
 
 	Environment.setGraphedData(newDateID, hour);
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
