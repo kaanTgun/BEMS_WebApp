@@ -7,6 +7,6 @@ This project is an interactive and visual representation of control strategies u
 
 -- Under Development --
 
-For more information go to : https://github.com/kaanTgun/BEMS
+For more information go to: https://github.com/kaanTgun/BEMS
 
-Live website: https://kaantgun.github.io/BEMS_WebApp/
+Live website: https://kaangun.com
