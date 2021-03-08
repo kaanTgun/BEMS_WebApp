@@ -121,11 +121,11 @@
 					<div class="clearfix"></div>
 					<div class="col-lg-8 col-md-7 col-sm-6 col-xs-12" >
 						<h5 style="margin-top: 22px;"> 			
-							<b>Exponential Mean Average (EMA)</b> 
+							<b>Naive Rule Based Control Policy</b> 
 						</h5>
 						<div class="align-self-center">
 							<p class="text-justify">
-								EMA is a type of mean average calculation with the difference of, placing a larger 
+								Exponential Mean Average (EMA) is a type of mean average calculation with the difference of, placing a larger 
 								weight on the most recent data points. Compared to linear programming, this strategy 
 								does not require to hold knowledge on the feature. It requires a limited number of past 
 								observations to determine if the current price is higher or lower than the average. When 
@@ -269,8 +269,7 @@
 							determine the impact of the hyperparameters on the optimal policy. 
 							Three major environment strategies were set and the influence on the final 
 							optimal strategy can be seen. Also, for each DQN and DDQN strategy three episode lengths, 
-							(24-48)hr, (48-100)hr and (100-200)hr were testes. 
-							While the DDQN thrived in the long episodic environments, DQN suffered significantly from maximization bias.
+							(24-48)hr, (48-100)hr and (100-200)hr were tested. 
 						</p>
 						<div style="justify-content: center;">
 							<h5><b>Strategy 1:</b></h5>
@@ -287,7 +286,7 @@
 					</div>
 
 					<div class="col-lg-6 col-md-12 col-sm-12" id='changeDQNStrategy'>
-						<div class="row justify-content-center ">
+						<div class="row justify-content-center" style="margin: 20px;">
 							<h3> Change Environment Variables </h3> 
 							<br/>	
 							<br/>	
@@ -352,7 +351,7 @@
 							</div>
 
 						</div>
-						<div class="row justify-content-center">
+						<div class="row justify-content-center" style="margin: 20px;">
 							<button class="btn btn-primary" style="width: 200px; background-color: #8D88F2; border-width: 0px;" onclick="changeDQNStrategyEvent()">
 								Change<br/>Parameters
 							</button>
@@ -421,20 +420,16 @@
 						</p>
 						<img src="Assets/LP_test_result.png" style="max-width: 100%; max-height: 100%;" rel="ugc">
 					</div>
-
-
-					<div  class="col-lg-6 col-md-6 col-sm-6">
+					<div  class="col-lg-6 col-md-6 col-sm-12">
 						<br/>
-						<h4> <b> Exponential Mean Average </b></h4>
+						<h4> <b> Naive Rule Based Control Policy </b></h4>
 						<p>
-							Four window sizes were tested, ranging from 6hr to 48hr. 
+							For the mean calculation, four window sizes were tested, ranging from 6hr to 48hr. 
 							By using a window size of 6hrs, the reward was calculated to be 3100.88$ with 23 cycles. 
 							Increased window size (48hr) resulted in a slightly better return of 3184.32$, reaching the limit with the same cycle count. 
 						</p>
 						<img src="Assets/EMA_test_result.png" style="max-width: 100%; max-height: 100%;" rel="ugc">
 					</div>
-
-
 				</div>
 
 				<br/>

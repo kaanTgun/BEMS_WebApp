@@ -36,7 +36,7 @@ class Enve {
 				
 				let date_time = new Date(element.Date);
 				if (DataObj.Date !== date_time.getDate()) {
-					DataObj.Date = date_time.getDate(); // TODO: Fix
+					DataObj.Date = date_time.getDate(); 
 				};
 				DataObj.Month.push(date_time.getMonth() + date_time.getDay() * 0.1);
 				DataObj.Time.push(date_time.getHours());
@@ -85,7 +85,7 @@ class Actor {
 			else{
 				this.GraphedData.Actions.push(0);
 			}
-			this.GraphedData.SOCs.push(this.GraphedData.soc);
+			this.GraphedData.SOCs.push(Number(this.GraphedData.soc).toFixed(1));
 		};
 	};
 
@@ -311,7 +311,7 @@ function CalcTotalReward(actions) {
 	let reward = 0;
 
 	for (let index = 0; index < actions.length; index++) {
-		const action = Number((actions[index]).toFixed(1));
+		const action = actions[index].toFixed(1);
 		if (0.1 == action){
 			// Buy
 			reward -= Environment.GraphedData.DataObj.Price[index] * Environment.batteryCapacity;
@@ -322,7 +322,7 @@ function CalcTotalReward(actions) {
 		}
 	};
 
-	return reward;
+	return reward.toFixed(2);
 };
 function EMA_CheckboxEvent() {
 	let ckbx = document.getElementById('EMA_Checkbox');
@@ -348,7 +348,7 @@ function DateChanged(){
 
 	Environment.setGraphedData(newDateID, hour);
 	document.getElementsByClassName("currentDate")[0].innerHTML = newDate;
-	updateCalcs()
+	updateCalcs();
 };
 function DateDraged() {
 	const newDateID = document.getElementsByClassName('slider')[0].value;
