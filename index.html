@@ -59,6 +59,20 @@
 		<div style="background-color:#EFD57F;">
 			<div class="container">
 				<h4 style="padding-top: 40px;">
+					<b>Credits:</b>
+				</h4>
+				<div  class="container">
+					<br/>
+					<img src="Assets/carleton_logo.svg" alt="carleton_logo" class="img-fluid" >
+				</div>
+				<p>
+					This project has been my capstone project as a 4th year Sustainable and Renewable Energy Engineering student
+					at Carleton Univerity. With the education Carleton Univerity has provided, I was able to gain a deep understanding 
+					in energy engineering and build this project. <br/>
+					I'm immensely grateful to Prof. Mostafa Farrokhabadi and Prof. Shichao Liu for assisting and mentoring me throughout this project. 
+				</p>
+				
+				<h4 style="padding-top: 40px;">
 					<b>
 					What is the energy arbitrage problem?
 					</b>
@@ -219,7 +233,7 @@
 				</div>
 				<div class="form-check form-check-inline">
 					<input class="form-check-input" type="checkbox" id="DDQN_Checkbox" onclick="DDQN_CheckboxEvent()">
-					<label class="form-check-label" for="inlineCheckbox1">Double Deep Q-Network 🤖 🤖</label>
+					<label class="form-check-label" for="inlineCheckbox1">Double Deep Q-Network 🤖 🤖 </label>
 				</div>
 			</div>
 		</div>
@@ -234,7 +248,11 @@
 				</div>
 			</div>
 
-			<div class="loader" id="loader_1"></div>
+			<div id="loader_1">
+				<div class="loader"></div>
+				<h1 style="text-align: center;">Loading...</h1>
+				<h3 style="text-align: center;">This might take a few seconds</h3>
+			</div>
 
 			<div class="slidecontainer">
 				<input type="range" min="24" value="50" class="slider" oninput="DateDraged()" onchange="DateChanged()" >
@@ -355,7 +373,7 @@
 							<button class="btn btn-primary" style="width: 200px; background-color: #8D88F2; border-width: 0px;" onclick="changeDQNStrategyEvent()">
 								Change<br/>Parameters
 							</button>
-						</div>						
+						</div>
 					</div>
 				</div>
 
@@ -412,7 +430,7 @@
 						<h4> <b> Linear Programming </b></h4>
 						<p>
 							The test dataset is large to find the optimal solution, however, 
-							it was estimated to be 14219.91 $ with 0.00001 tolerance. 
+							it was estimated to be <b>14219.91 $</b> with 0.00001 tolerance. 
 							To obtain this value, the battery cycle count was calculated to be 81. 
 							<br/>
 							<br/>
@@ -426,7 +444,7 @@
 						<p>
 							For the mean calculation, four window sizes were tested, ranging from 6hr to 48hr. 
 							By using a window size of 6hrs, the reward was calculated to be 3100.88$ with 23 cycles. 
-							Increased window size (48hr) resulted in a slightly better return of 3184.32$, reaching the limit with the same cycle count. 
+							Increased window size (48hr) resulted in a slightly better return of <b>3184.32$ </b>, reaching the limit with the same cycle count. 
 						</p>
 						<img src="Assets/EMA_test_result.png" style="max-width: 100%; max-height: 100%;" rel="ugc">
 					</div>
@@ -442,16 +460,16 @@
 						<p>
 							The agents trained using the 1st strategy returned a similar 
 							total reward in the medium and long sequences. DDQN trained in the mid-range 
-							produced a slightly more reward, toping 8064.00$ with 10 battery-cycle count. 
+							produced a slightly more reward, toping <b>8064.00$ with 10 battery-cycle count </b>. 
 							This result indicates that deep reinforcement learning produced a 2.5x greater return then the EMA. 
 						</p>
 					
-					<div class="row justify-content-center ">
+					<div class="row justify-content-center align-items-center ">
 						<div  class="col-lg-8 col-md-8 col-sm-8">
-							<img src="Assets/S1_rewards.png" style="max-width: 100%; max-height: 100%; margin-bottom: 10px;" rel="ugc">
+							<img src="Assets/Short_episodic_results.png" style="max-width: 100%; max-height: 100%; margin-bottom: 10px;" rel="ugc">
 						</div>
-						<div  class="col-lg-4 col-md-4 col-sm-4 ">	
-							<img src="Assets/S1_cycles.png" style="max-width: 100%; max-height: 100%; margin-bottom: 10px;" rel="ugc">
+						<div  class="col-lg-4 col-md-4 col-sm-4">	
+							<img src="Assets/Short_episodic_count.png" style="max-width: 100%; max-height: 100%; margin-bottom: 10px;" rel="ugc">
 						</div>
 					</div>
 				</div>
@@ -466,19 +484,21 @@
 						not distinctive, DQN agents trained in the longer episodes produced a significant performance drop. 
 						With the increased episode lengths, DQN became unstable and suffered from maximization bias. The DDQN 
 						architecture overcame this challenge producing significantly improved outcomes with a much stable strategy. 
-						The DDQN agent trained using the 3rd strategy in long episodes returned the maximum reward of 9136.00$ with only 8 cycles. 
+						The DDQN agent trained using the 3rd strategy in long episodes returned the maximum reward of <b> 9136.00$ with only 8 cycles </b>. 
 					</p>
 				</div>
 				<div class="row justify-content-center ">
 					<div  class="col-lg-6 col-md-6 col-sm-12">
-						<img src="Assets/S2_rewards.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;" rel="ugc">
-						<img src="Assets/S2_cycles.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;" rel="ugc">
+						<div class="col justify-content-center ">
+							<img src="Assets/Mid_episodic_results.png" style="max-width: 100%; max-height: 100%; margin-bottom: 20px;" rel="ugc">
+							<img src="Assets/Mid_episodic_count.png" style="max-width: 100%; max-height: 100%; margin-bottom: 20px;" rel="ugc">
+						</div>
 					</div>
 					<div  class="col-lg-6 col-md-6 col-sm-12 ">	
 						<div class="row justify-content-center ">
 
-							<img src="Assets/S3_rewards.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;" rel="ugc">
-							<img src="Assets/S3_cycles.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;" rel="ugc">
+							<img src="Assets/Long_episodic_results.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;" rel="ugc">
+							<img src="Assets/Long_episodic_count.png" style="max-width: 100%; max-height: 50%; margin-bottom: 20px;" rel="ugc">
 						</div>
 					</div>
 				</div>

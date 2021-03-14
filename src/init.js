@@ -361,6 +361,9 @@ async function changeDQNStrategyEvent() {
 	const emaParam = document.querySelector('input[name="emaInput"]:checked').value;
 	const decayParam = document.querySelector('input[name="decayInput"]:checked').value;
 
+	document.getElementById("chart_1").style.display = "none";
+	document.getElementById("loader_1").style.display = "block";
+
 	let DDQNModelPath = `${ModelPath}DDQN_Long_S1.onnx`;
 	let DQNModelPath = `${ModelPath}DQN_Long_S1.onnx`;
 
@@ -377,6 +380,8 @@ async function changeDQNStrategyEvent() {
 		DDQN	= await new Actor(DDQNModelPath, 'DDQN', Environment.initSOC, '#A1A1CF');
 		DQN		= await new Actor(DQNModelPath, 'DQN', Environment.initSOC, '#EF7FE3');
 		await updateCalcs();
+		document.getElementById("chart_1").style.display = "block";
+		document.getElementById("loader_1").style.display = "none";
 
 	} catch (error) {
 		console.error(error);
