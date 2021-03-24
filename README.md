@@ -5,7 +5,6 @@ at all time. With the increased adaptation of renewable resources, it is more im
 to balance the power grid and avoid any power shortages. 
 This project is an interactive and visual representation of control strategies used to solve the energy arbitrage problem. 
 
--- Under Development --
 
 For more information go to: https://github.com/kaanTgun/BEMS
 

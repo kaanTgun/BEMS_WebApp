@@ -227,7 +227,7 @@ class BarGraph{
 					scales: {
 						yAxes: [{
 							ticks: {
-                max: Math.max(...this.Rewards)+2,
+                max: Math.max(...this.Rewards)+5,
 								min: Math.min(...this.Rewards, 0)
 							}},
 						]
@@ -326,7 +326,7 @@ function CalcTotalReward(actions) {
 };
 function EMA_CheckboxEvent() {
 	let ckbx = document.getElementById('EMA_Checkbox');
-	mainGraph.updateGraph('EMA',Strategies.EMA, Strategies.EMA.Color,  ckbx.checked);
+	mainGraph.updateGraph('Naïve Rule Based Control Policy',Strategies.EMA, Strategies.EMA.Color,  ckbx.checked);
 };
 function DDQN_CheckboxEvent() {
 	let ckbx = document.getElementById('DDQN_Checkbox');

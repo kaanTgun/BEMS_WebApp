@@ -139,7 +139,7 @@
 						</h5>
 						<div class="align-self-center">
 							<p class="text-justify">
-								Exponential Mean Average (EMA) is a type of mean average calculation with the difference of, placing a larger 
+								Naïve Rule Based Control Policy uses the Exponential Mean Average (EMA), which is a type of mean average calculation with the difference of, placing a larger 
 								weight on the most recent data points. Compared to linear programming, this strategy 
 								does not require to hold knowledge on the feature. It requires a limited number of past 
 								observations to determine if the current price is higher or lower than the average. When 
@@ -225,7 +225,7 @@
 				</div>
 				<div class="form-check form-check-inline">
 					<input class="form-check-input" type="checkbox" id="EMA_Checkbox"  onclick="EMA_CheckboxEvent()">
-					<label class="form-check-label" for="inlineCheckbox2">Exponential Moving Average 📊 </label>
+					<label class="form-check-label" for="inlineCheckbox2">Naïve Rule Based Control Policy 📊 </label>
 				</div>
 				<div class="form-check form-check-inline">
 					<input class="form-check-input" type="checkbox" id="DQN_Checkbox" onclick="DQN_CheckboxEvent()">
@@ -461,7 +461,7 @@
 							The agents trained using the 1st strategy returned a similar 
 							total reward in the medium and long sequences. DDQN trained in the mid-range 
 							produced a slightly more reward, toping <b>8064.00$ with 10 battery-cycle count </b>. 
-							This result indicates that deep reinforcement learning produced a 2.5x greater return then the EMA. 
+							This result indicates that deep reinforcement learning produced a 2.5x greater return then the Naïve Rule Based Control Policy. 
 						</p>
 					
 					<div class="row justify-content-center align-items-center ">
