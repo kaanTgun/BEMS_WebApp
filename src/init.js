@@ -110,10 +110,10 @@ class LineGraph{
 						data: Environment.GraphedData.DataObj.Price.map(x => x*1000),
 						yAxisID: 'left-y-axis',
 	
-						borderWidth: 1,
+						borderWidth: 2,
 						pointRadius: 1,
 						lineTension:0,
-						backgroundColor: 'rgb(255, 99, 132)',
+						backgroundColor: '#F8F8FA',
 						borderColor: 'rgb(255, 99, 132)',
 						fill: false
 					}
@@ -139,7 +139,10 @@ class LineGraph{
 							position: 'left',
 							scaleLabel: {
 								display: true,
-								labelString: 'MWh/$' 
+								labelString: '$/MWh',
+								fontSize:20,
+								fontColor:'#000000',
+								lineHeight:2
 							}
 							
 						},
@@ -149,7 +152,11 @@ class LineGraph{
 							position: 'right',
 							scaleLabel: {
 								display: true,
-								labelString: 'BatteryCharge' 
+								labelString: 'Battery Charge',
+								fontSize:20,
+								fontColor:'#000000',
+								lineHeight:2
+
 							},
 							ticks: {
                 max: 1,
@@ -377,7 +384,7 @@ async function changeDQNStrategyEvent() {
 			DQNModelPath 		= `${ModelPath}DQN_Long_${DQNStrategy}_${emaParam}_${decayParam}.onnx`;
 		};
 
-		DDQN	= await new Actor(DDQNModelPath, 'DDQN', Environment.initSOC, '#A1A1CF');
+		DDQN	= await new Actor(DDQNModelPath, 'DDQN', Environment.initSOC, '#8D88F2');
 		DQN		= await new Actor(DQNModelPath, 'DQN', Environment.initSOC, '#EF7FE3');
 		await updateCalcs();
 		document.getElementById("chart_1").style.display = "block";
@@ -389,7 +396,7 @@ async function changeDQNStrategyEvent() {
 };
 loadData(DatasetPath).then(async JSON_DATA => {
 	Environment = new Enve(JSON_DATA, soc);
-	DDQN				= await new Actor(`${ModelPath}DDQN_Long_S1.onnx`, 'DDQN', Environment.initSOC, '#A1A1CF');
+	DDQN				= await new Actor(`${ModelPath}DDQN_Long_S1.onnx`, 'DDQN', Environment.initSOC, '#8D88F2');
 	DQN					= await new Actor(`${ModelPath}DQN_Long_S1.onnx`, 'DQN', Environment.initSOC, '#EF7FE3');
 	document.getElementsByClassName("currentDate")[0].innerHTML = Environment.JsonData[StartIndex].Date;
 	await updateCalcs();
