@@ -106,7 +106,7 @@ class LineGraph{
 				labels: Environment.GraphedData.DataObj.Time,
 				datasets: [
 					{
-						label: 'Electricity Price ($/WWh)',
+						label: 'Electricity Price ($/MWh)',
 						data: Environment.GraphedData.DataObj.Price.map(x => x*1000),
 						yAxisID: 'left-y-axis',
 	
