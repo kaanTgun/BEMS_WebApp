@@ -97,16 +97,10 @@
 				</div>
 				<h4 style="padding-top: 40px;">
 					<b>
-						Few things to keep in mind:
+						Dataset:
 					</b>
 				</h4>
 				<ul style="padding-bottom: 40px;">
-					<li>
-						Battery operation capacity is limited to minimum of 20% to maximum of 80%
-					</li>
-					<li>
-						Assume the battery can be charged and discharged only 10% per hour
-					</li>
 					<li>
 						The dataset used is available in <a href="https://www.ieso.ca/en/Power-Data/Data-Directory">Independent Electricity System Operator (IESO)</a>
 					</li>
@@ -117,6 +111,24 @@
 											<!-- Discriptions-1 START -->
 		<div style="background-color: #A1CFCF; padding-top: 50px;">
 			<div class="container">
+				<div>
+					<h4> <b>Experiment settings</b> </h4>
+					<ul>
+						<li>
+							Battery operation capacity was caped to maximum of 80% and minimum of 20%.
+						</li>
+						<li>
+							Assume the battery can be charged and discharged only 10% per hour.
+						</li>
+						<li>
+							For each control system, the initial SOC was set at 60%. 
+						</li>
+						<li>
+							Test dataset ranging from 2015-05-15 02:00:00 to 2015-08-04 20:00:00 consists of 2000 hr of price data.
+						</li>
+					</ul>
+				</div>
+
 				<div>
 					<h5> 
 						<b>Linear Programming (LP)</b>
@@ -131,14 +143,14 @@
 					</p>
 					<img src="Assets/LP_equations.png" rel="ugc" class="img-fluid" alt="Linear Programming Image">
 				</div>
-				<div class="row align-items-center" style="padding-bottom: 50px;" >
-					<div class="clearfix"></div>
-					<div class="col-lg-8 col-md-7 col-sm-6 col-xs-12" >
+				<div class="column align-items-center" style="padding-bottom: 50px;" >
+					<!-- <div class="clearfix"></div> -->
+					<div>
 						<h5 style="margin-top: 22px;"> 			
 							<b>Naive Rule Based Control Policy</b> 
 						</h5>
 						<div class="align-self-center">
-							<p class="text-justify">
+							<p>
 								Naïve Rule Based Control Policy uses the Exponential Mean Average (EMA), which is a type of mean average calculation with the difference of, placing a larger 
 								weight on the most recent data points. Compared to linear programming, this strategy 
 								does not require to hold knowledge on the feature. It requires a limited number of past 
@@ -149,16 +161,16 @@
 						</div>
 
 					</div>
-					<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
+					<!-- <div class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
 						<img src="Assets/EMA.png" class="img-fluid" alt="Responsive image" style="border-radius: 7px;"/>
-					</div>
+					</div> -->
 					<img src="Assets/EMA_equations.png" class="img-fluid" rel="ugc" alt="Exponential Mean Average (EMA) Image" style="width: 900px;">
 
 				
 				<div class="row align-items-center" style="padding-bottom: 50px;">
 
 					<div class="col-lg-8 col-md-7 col-sm-6 col-xs-12" >
-						<div>
+						<div style="margin-top: 22px;">
 							<h5>
 								<b>
 									Reinforcement Learning (RL)
@@ -305,7 +317,7 @@
 
 					<div class="col-lg-6 col-md-12 col-sm-12" id='changeDQNStrategy'>
 						<div class="row justify-content-center" style="margin: 20px;">
-							<h3> Change Environment Variables </h3> 
+							<h3> Change Environment Hyperparameters </h3> 
 							<br/>	
 							<br/>	
 							<br/>		
@@ -417,12 +429,6 @@
 				<br/>
 				<h2 style="text-align: center;"> <b> Results and Findings</b></h2>
 				<br/>
-				<ul>
-					<li>Test dataset ranging from 2015-05-15 02:00:00 to 
-						2015-08-04 20:00:00 consists of 2000 hr of price data.</li>
-						<li>For each control system, the initial SOC was set at 60%. 
-						</li>
-				</ul>
 
 				<div class="row justify-content-center ">
 					<div  class="col-lg-6 col-md-6 col-sm-12">
@@ -430,7 +436,7 @@
 						<h4> <b> Linear Programming </b></h4>
 						<p>
 							The test dataset is large to find the optimal solution, however, 
-							it was estimated to be <b>14219.91 $</b> with 0.00001 tolerance. 
+							it was estimated to be <b>14219.91 $</b> with 10^-5 tolerance. 
 							To obtain this value, the battery cycle count was calculated to be 81. 
 							<br/>
 							<br/>
